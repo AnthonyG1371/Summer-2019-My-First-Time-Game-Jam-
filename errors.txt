@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 19: end of line expected.
+    hide screen stat_box(protag_stats)
+                        ^
+
+Ren'Py Version: Ren'Py 7.3.2.320
+Sat Jul 06 12:26:19 2019

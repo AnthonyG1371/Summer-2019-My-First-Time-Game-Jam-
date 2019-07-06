@@ -1,0 +1,84 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/script.rpy", line 21, in script call
+    call phone_start
+  File "game/options.rpy", line 52, in script
+    $ renpy.pause(0.2)
+  File "game/options.rpy", line 52, in <module>
+    $ renpy.pause(0.2)
+  File "game/screens.rpy", line 164, in execute
+    screen stat_box(main_stats):
+  File "game/screens.rpy", line 164, in execute
+    screen stat_box(main_stats):
+  File "game/screens.rpy", line 165, in execute
+    frame:
+  File "game/screens.rpy", line 167, in execute
+    vbox:
+  File "game/screens.rpy", line 170, in execute
+    text "Pride: [main_statss.pride]"
+NameError: Name 'main_statss' is not defined.
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/script.rpy", line 21, in script call
+    call phone_start
+  File "game/options.rpy", line 52, in script
+    $ renpy.pause(0.2)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\ast.py", line 912, in execute
+    renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\python.py", line 2004, in py_exec_bytecode
+    exec bytecode in globals, locals
+  File "game/options.rpy", line 52, in <module>
+    $ renpy.pause(0.2)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\exports.py", line 1471, in pause
+    rv = renpy.ui.interact(mouse='pause', type='pause', roll_forward=roll_forward)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\ui.py", line 295, in interact
+    rv = renpy.game.interface.interact(roll_forward=roll_forward, **kwargs)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 2699, in interact
+    repeat, rv = self.interact_core(preloads=preloads, trans_pause=trans_pause, **kwargs)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 3091, in interact_core
+    root_widget.visit_all(lambda i : i.per_interact())
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 541, in visit_all
+    d.visit_all(callback, seen)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 541, in visit_all
+    d.visit_all(callback, seen)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 541, in visit_all
+    d.visit_all(callback, seen)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\screen.py", line 430, in visit_all
+    callback(self)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\core.py", line 3091, in <lambda>
+    root_widget.visit_all(lambda i : i.per_interact())
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\screen.py", line 440, in per_interact
+    self.update()
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\display\screen.py", line 625, in update
+    self.screen.function(**self.scope)
+  File "game/screens.rpy", line 164, in execute
+    screen stat_box(main_stats):
+  File "game/screens.rpy", line 164, in execute
+    screen stat_box(main_stats):
+  File "game/screens.rpy", line 165, in execute
+    frame:
+  File "game/screens.rpy", line 167, in execute
+    vbox:
+  File "game/screens.rpy", line 170, in execute
+    text "Pride: [main_statss.pride]"
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\text\text.py", line 1479, in __init__
+    self.set_text(text, scope, substitute)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\text\text.py", line 1598, in set_text
+    i, did_sub = renpy.substitutions.substitute(i, scope, substitute)
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\substitutions.py", line 253, in substitute
+    s = formatter.vformat(s, (), kwargs)
+  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/string.py", line 563, in vformat
+  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/string.py", line 585, in _vformat
+  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/string.py", line 646, in get_field
+  File "/home/tom/ab/x64lucid-deps/install/lib/python2.7/string.py", line 605, in get_value
+  File "C:\Users\Anthony G\Downloads\Games\Renpy\renpy-7.3.2-sdk\renpy\substitutions.py", line 212, in __getitem__
+    raise NameError("Name '{}' is not defined.".format(key))
+NameError: Name 'main_statss' is not defined.
+
+Windows-8-6.2.9200
+Ren'Py 7.3.2.320
+TEST 1.0
+Sat Jul 06 12:23:25 2019
