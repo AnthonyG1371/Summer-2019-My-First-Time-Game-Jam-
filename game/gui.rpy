@@ -10,6 +10,12 @@ init offset = -2
 ## width and height of the game.
 init python:
     gui.init(1280, 720)
+    #gui.init(1920, 1080)
+
+## Need to fix resoultion to work with phone and normal gameplay ##
+#init python:
+#    config.screen_width = 1920
+#    config.screen_height = 1080
 
 
 
@@ -469,6 +475,3 @@ init python:
 
         gui.nvl_button_width = 1240
         gui.nvl_button_xpos = 20
-
-
-

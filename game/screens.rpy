@@ -2,14 +2,9 @@
 ## Initialization
 ################################################################################
 
-## Need to fix resoultion to work with phone and normal gameplay ##
-#init python:
-#    config.screen_width = 1920
-#    config.screen_height = 1080
-
 init offset = -1
 
-############ phone code here########
+############ phone code here ########
 # if you dont use  1920 x 1080 youre going to have to play with these numbers to get it to work and make the phone image be smaller somehow
 # just keep changing stuff and refreshing the game until it works, sorry lol
 
@@ -24,6 +19,7 @@ init 5:
 
     style phone_message_frame:
         background Solid("#d9398c")
+        #background Solid("800000")
         ypadding 10
         xpadding 10
 

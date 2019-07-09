@@ -2,7 +2,13 @@
 The Death Contract by revolverrob
 
 Team Members:
+
 revolverrob - art
-runar - audio
+
+pen-ultimate - writing
+
+aw1731 - writing
+
 silvernexez - code
-speck - code
+
+omelette - code
