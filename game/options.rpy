@@ -4,7 +4,7 @@
 ## them. Lines beginning with a single '#' mark are commented-out code, and you
 ## may want to uncomment them when appropriate.
 
-################# phone code stars ###################
+################# phone code starts ###################
 
 image phone = "images/phone.png"
 
@@ -12,6 +12,7 @@ image phone = "images/phone.png"
 # Picking up the phone
 transform phone_pickup:
     yalign 1.0 xalign 0.5
+    zoom 0.85
     yoffset 900
     easein 0.3 yoffset 100
 
@@ -145,7 +146,7 @@ label message_start(who, what):
 ##
 ## The _() surrounding the string marks it as eligible for translation.
 
-define config.name = _("TEST")
+define config.name = _("The Death Contract")
 
 
 ## Determines if the title given above is shown on the main menu screen. Set
@@ -156,7 +157,7 @@ define gui.show_name = True
 
 ## The version of the game.
 
-define config.version = "1.0"
+define config.version = "0.002"
 
 
 ## Text that is placed on the game's about screen. Place the text between the
@@ -170,7 +171,7 @@ define gui.about = _p("""
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "TEST"
+define build.name = "The_Death_Contract_v0.002"
 
 
 ## Sounds and music ############################################################
