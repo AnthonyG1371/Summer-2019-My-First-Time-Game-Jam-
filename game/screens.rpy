@@ -571,7 +571,22 @@ screen main_menu():
     add gui.main_menu_background at main_menu_portrait_slide
     add "main_menu_title" at main_menu_title_slide
 
-    use navigation
+    vbox:
+        style_prefix "navigation"
+        pos (55, 550)
+        textbutton _("Start") action Start()
+        textbutton _("Load") action ShowMenu("load")
+        textbutton _("Preferences") action ShowMenu("preferences")
+        textbutton _("About") action ShowMenu("about")
+        if renpy.variant("pc"):
+            textbutton _("Help") action ShowMenu("help")
+            textbutton _("Quit") action Quit(confirm=not main_menu)
+
+style navigation_button_text:
+    color "#fff"
+    outlines [ (absolute(4), "#fff0", absolute(0), absolute(0)) ]
+    hover_color '#324e7d'
+    hover_outlines [ (absolute(4), "#fff", absolute(0), absolute(0)) ]
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
