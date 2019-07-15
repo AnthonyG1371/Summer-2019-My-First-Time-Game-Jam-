@@ -512,32 +512,66 @@ style navigation_button_text:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
+transform main_menu_portrait_slide:
+    xpos 0.5
+    alpha 0.0
+    easein 2.5 xpos 0.0 alpha 1.0
+
+transform main_menu_title_slide:
+    pos (-540, 100)
+    easein 2.5 pos (50, 100)
+
+image main_menu_title:
+    "gui/title_text/0.png"
+    pause 0.5
+    "gui/title_text/1.png"
+    pause 0.1
+    "gui/title_text/2.png"
+    pause 0.1
+    "gui/title_text/3.png"
+    pause 0.1
+    "gui/title_text/4.png"
+    pause 0.1
+    "gui/title_text/5.png"
+    pause 0.1
+    "gui/title_text/6.png"
+    pause 0.1
+    "gui/title_text/7.png"
+    pause 0.1
+    "gui/title_text/8.png"
+    pause 0.1
+    "gui/title_text/9.png"
+    pause 0.1
+    "gui/title_text/10.png"
+    pause 0.1
+    "gui/title_text/11.png"
+    pause 0.1
+    "gui/title_text/12.png"
+    pause 0.1
+    "gui/title_text/13.png"
+    pause 0.1
+    "gui/title_text/14.png"
+    pause 0.1
+    "gui/title_text/15.png"
+    pause 0.1
+    "gui/title_text/16.png"
+    pause 0.1
+    "gui/title_text/17.png"
+    pause 0.1
+    "gui/title_text/18.png"
+    pause 0.1
+    "gui/title_text/19.png"
+    pause 0.1
+    "gui/title_text/20.png"
+
 screen main_menu():
-
-    ## This ensures that any other menu screen is replaced.
     tag menu
-
     style_prefix "main_menu"
+    add "#0a0a0a"
+    add gui.main_menu_background at main_menu_portrait_slide
+    add "main_menu_title" at main_menu_title_slide
 
-    add gui.main_menu_background
-
-    ## This empty frame darkens the main menu.
-    frame:
-        pass
-
-    ## The use statement includes another screen inside this one. The actual
-    ## contents of the main menu are in the navigation screen.
     use navigation
-
-    if gui.show_name:
-
-        vbox:
-            text "[config.name!t]":
-                style "main_menu_title"
-
-            text "[config.version]":
-                style "main_menu_version"
-
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
