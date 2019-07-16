@@ -513,15 +513,17 @@ style navigation_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
 transform main_menu_portrait_slide:
-    xpos 0.5
-    alpha 0.0
-    easein 2.5 xpos 0.0 alpha 1.0
+    on show:
+        xpos 0.5
+        alpha 0.0
+        easein 2.5 xpos 0.0 alpha 1.0
 
 transform main_menu_title_slide:
-    pos (-540, 100)
-    easein 2.5 pos (50, 100)
+    on show:
+        pos (-540, 100)
+        easein 2.5 pos (50, 100)
 
-image main_menu_title:
+image main_menu_title_anim:
     "gui/title_text/0.png"
     pause 0.5
     "gui/title_text/1.png"
@@ -563,17 +565,36 @@ image main_menu_title:
     "gui/title_text/19.png"
     pause 0.1
     "gui/title_text/20.png"
+    pause 0.0
 
-screen main_menu():
+image main_menu_title_static:
+    "gui/title_text/20.png"
+
+transform main_menu_element:
+    on show:
+        alpha 0.0
+        pause 2.5
+        linear 0.5 alpha 1.0
+
+screen main_menu(anim=True):
     tag menu
     style_prefix "main_menu"
     add "#0a0a0a"
-    add gui.main_menu_background at main_menu_portrait_slide
-    add "main_menu_title" at main_menu_title_slide
-
+    add gui.main_menu_background:
+        if anim:
+            at main_menu_portrait_slide
+    if anim:
+        add "main_menu_title_anim":
+            pos (50, 100)
+            at main_menu_title_slide
+    else:
+        add "main_menu_title_static":
+            pos (50, 100)
     vbox:
         style_prefix "navigation"
         pos (55, 550)
+        if anim:
+            at main_menu_element
         textbutton _("Start") action Start()
         textbutton _("Load") action ShowMenu("load")
         textbutton _("Preferences") action ShowMenu("preferences")
@@ -581,6 +602,22 @@ screen main_menu():
         if renpy.variant("pc"):
             textbutton _("Help") action ShowMenu("help")
             textbutton _("Quit") action Quit(confirm=not main_menu)
+
+    if anim:
+        use main_menu_transition_in
+
+image transparent = "#0000"
+
+label main_menu(anim=True):
+    call screen main_menu(anim)
+    return
+
+screen main_menu_transition_in():
+    timer 2.5 action Hide("main_menu_transition_in")
+    modal True
+    imagebutton:
+        idle "transparent"
+        action Call("main_menu", anim=False)
 
 style navigation_button_text:
     color "#fff"
