@@ -520,7 +520,7 @@ transform main_menu_portrait_slide:
 
 transform main_menu_title_slide:
     on show:
-        pos (-540, 100)
+        pos (-953, 100)
         easein 2.5 pos (50, 100)
 
 image main_menu_title_anim:
@@ -567,6 +567,50 @@ image main_menu_title_anim:
     "gui/title_text/20.png"
     pause 0.0
 
+image main_menu_title_anim_out:
+    "gui/title_text/20.png"
+    pause 0.5
+    "gui/title_text/19.png"
+    pause 0.1
+    "gui/title_text/18.png"
+    pause 0.1
+    "gui/title_text/17.png"
+    pause 0.1
+    "gui/title_text/16.png"
+    pause 0.1
+    "gui/title_text/15.png"
+    pause 0.1
+    "gui/title_text/14.png"
+    pause 0.1
+    "gui/title_text/13.png"
+    pause 0.1
+    "gui/title_text/12.png"
+    pause 0.1
+    "gui/title_text/11.png"
+    pause 0.1
+    "gui/title_text/10.png"
+    pause 0.1
+    "gui/title_text/9.png"
+    pause 0.1
+    "gui/title_text/8.png"
+    pause 0.1
+    "gui/title_text/7.png"
+    pause 0.1
+    "gui/title_text/6.png"
+    pause 0.1
+    "gui/title_text/5.png"
+    pause 0.1
+    "gui/title_text/4.png"
+    pause 0.1
+    "gui/title_text/3.png"
+    pause 0.1
+    "gui/title_text/2.png"
+    pause 0.1
+    "gui/title_text/1.png"
+    pause 0.1
+    "gui/title_text/0.png"
+    pause 0.0
+
 image main_menu_title_static:
     "gui/title_text/20.png"
 
@@ -595,7 +639,7 @@ screen main_menu(anim=True):
         pos (55, 550)
         if anim:
             at main_menu_element
-        textbutton _("Start") action Start()
+        textbutton _("Start") action [Function(renpy.transition, dissolve), Show('main_menu_anim_out')]
         textbutton _("Load") action ShowMenu("load")
         textbutton _("Preferences") action ShowMenu("preferences")
         textbutton _("About") action ShowMenu("about")
@@ -605,6 +649,25 @@ screen main_menu(anim=True):
 
     if anim:
         use main_menu_transition_in
+
+transform portrait_out():
+    pause 0.5
+    easeout 2.0 xpos 1.0 alpha 0.0
+
+transform text_out():
+    pos (50, 100)
+    pause 0.5
+    easeout 1.5 pos (-953, 100)
+
+screen main_menu_anim_out():
+    timer 2.5 action Start ()
+    modal True
+    add "#0a0a0a"
+    add gui.main_menu_background at portrait_out
+    add "main_menu_title_anim_out" at text_out
+    imagebutton:
+        idle "transparent"
+        action Start()
 
 image transparent = "#0000"
 
