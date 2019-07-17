@@ -12,7 +12,6 @@ image phone = "images/phone.png"
 # Picking up the phone
 transform phone_pickup:
     yalign 1.0 xalign 0.5
-    zoom 0.85
     yoffset 900
     easein 0.3 yoffset 100
 

@@ -652,15 +652,15 @@ screen main_menu(anim=True):
 
 transform portrait_out():
     pause 0.5
-    easeout 2.0 xpos 1.0 alpha 0.0
+    easeout 2.5 xpos 1.0 alpha 0.0
 
 transform text_out():
     pos (50, 100)
     pause 0.5
-    easeout 1.5 pos (-953, 100)
+    easeout 2.0 pos (-953, 100)
 
 screen main_menu_anim_out():
-    timer 2.5 action Start ()
+    timer 3.0 action Start ()
     modal True
     add "#0a0a0a"
     add gui.main_menu_background at portrait_out
