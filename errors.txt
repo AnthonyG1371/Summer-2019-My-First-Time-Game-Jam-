@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 271: expected statement.
-    fade
-        ^
+File "game/script.rpy", line 344: expected 'simple_expression' not found.
+    scene bg classroom with
+                           ^
 
 Ren'Py Version: Ren'Py 7.3.2.320
-Mon Jul 08 21:42:39 2019
+Sat Jul 20 14:27:39 2019

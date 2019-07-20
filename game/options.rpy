@@ -12,8 +12,8 @@ image phone = "images/phone.png"
 # Picking up the phone
 transform phone_pickup:
     yalign 1.0 xalign 0.5
-    zoom 0.85
-    yoffset 900
+    #zoom 0.85
+    #yoffset 900
     easein 0.3 yoffset 100
 
 transform phone_hide:
@@ -157,7 +157,7 @@ define gui.show_name = True
 
 ## The version of the game.
 
-define config.version = "0.002"
+define config.version = "0.9"
 
 
 ## Text that is placed on the game's about screen. Place the text between the
@@ -253,7 +253,7 @@ define config.window_hide_transition = Dissolve(.2)
 ## Controls the default text speed. The default, 0, is infinite, while any other
 ## number is the number of characters per second to type out.
 
-default preferences.text_cps = 0
+default preferences.text_cps = 30
 
 
 ## The default auto-forward delay. Larger numbers lead to longer waits, with 0

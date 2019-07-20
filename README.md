@@ -3,7 +3,7 @@ The Death Contract by revolverrob
 
 Team Members:
 
-revolverrob - art
+revolverrob - art, writing
 
 pen-ultimate - writing
 
