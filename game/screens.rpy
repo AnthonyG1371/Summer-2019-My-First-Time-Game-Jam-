@@ -77,7 +77,8 @@ screen phone_message(who, what):
 screen phone_message2(who, what):
     vbox at incoming_message:
         style_group "phone_message"
-        xoffset -584
+        xoffset 200
+        # xoffset -584
         xalign 1.0
         # this one adds the triangular tip for the bubble, if you change colors you change this images too
         add "images/bubble-tip2.png" at phone_message_bubble_tip2
@@ -95,7 +96,7 @@ screen phone_message2(who, what):
 screen phone_message3(what):
     vbox at incoming_message:
         style_group "phone_message"
-        xoffset -584
+        xoffset 200
         xalign 1.0
         # this one adds the triangular tip for the bubble, if you change colors you change this images too
         add "images/bubble-tip2.png" at phone_message_bubble_tip2
@@ -113,7 +114,8 @@ screen phone_message3(what):
 screen phone_reply(reply1, label1, reply2, label2):
     modal True
     vbox:
-        xalign 0.5
+        xanchor 0.5
+        xpos phone_pos
         yalign 0.8
         spacing 5
 
