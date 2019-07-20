@@ -6,11 +6,33 @@
 # v0.010 alpha     Main menu and game resizing completed.
 # v0.020           Added working script up to the end of day 2.
 
-define v = Character("Valeria")
-define e = Character("Unknown", color = "#800000") #maroon
-define d = Character("Darren")
-define a = Character("Advisor")
+#------------------------------------------------
+# NOTES ON MORLITY AND FRIENDSHIP POINTS
+# BOTH START AT 0
+# CHANCES TO GAIN OR LOSE POINTS SHOW UP IN DAY 2
+#
+# ---Day 2
+#-Lecture
+#1: DEFEND DARREN OR DON'T SAY ANYTHING. +/- 1 TO BOTH
+#2: TAKE A PHOTO OR IGNORE IT, THEN IGNORE IT OR FLIP IT OVER. +2/-2 OR +0 MORALITY
+#3: LASH OUT AT THE PROFESSOR OR NOT. -1/+2 MORALITY
+#  3.5 IF LASHING OUT AT THE PROFESSOR, INSULT THEM OR CALM DOWN. -3/+1 MORALITY
+#4: JOIN DARREN FOR LUNCH OR NOT. +/- 1 TO FRIENDSHIP.
+#5: HIGH FIVE DARREN OR NOT. +1/+0 TO FRIENDSHIP.
+#6: THROW AWAY OR KEEP THE CAMPAIGN POSTERS. +/- 3 TO BOTH.
+#7: IF NOT IGNORING THE STUDENTS IN THE LIBRARY, DEFEND DARREN OR INSULT HIM. +/-1 TO FRIENDSHIP
+#8: TELL DARREN THE TRUTH OR NOT WHEN TEXTING AT NIGHT. +/- 1 TO FRIENDSHIP
+#
+#TOTAL POSSIBLE VALUES:
+#1223 = 8 MORALITY -12133 = -10 MORALITY
+#111311 = 8 FRIENDSHIP -110311 = -7 FRIENDSHIP
+#-----------------------------------------------
 
+define v = Character("Valeria")
+define d = Character("Darren")
+define e = Character("Unknown", color = "#800000") #maroon
+
+define tester = False
 $join_lunch = True
 
 # define screen effects
@@ -24,6 +46,9 @@ label start:
     # define and instantiates protagonists' stats
     python:
         stats = main_stats(0,0,0)
+
+    if not tester:
+        jump begin
 
     # debug scene selection
     label debug_menu:
@@ -55,17 +80,48 @@ label start:
                     jump night2
                 "Back":
                     jump debug_menu
-
+        "Day 3":
+            label menu_day3:
+            menu:
+                "Route 1: Low Friendship & Morality":
+                    menu:
+                        "Start":
+                            jump route3_1
+                        "Bedroom":
+                            jump bedroom3_1
+                        "Library":
+                            jump library3_1
+                        "Back":
+                            jump menu_day3
+                "Route 3: High Friendship & Morality":
+                    menu:
+                        "Start":
+                            jump route3_3
+                        "Bedroom":
+                            jump bedroom3_3
+                        "Library":
+                            jump library3_3
+                        "Back":
+                            jump menu_day3
+                "Back":
+                    jump debug_menu
+        "Day 4":
+            menu:
+                "Route 1: Low Friendship & Morality":
+                    jump route4_1
+                "Route 3: High Friendship & Morality":
+                    jump route4_3
         "Debug Test":
             jump test_space
 
         "Debug":
             jump debug
 
-# SCRIPT V2
+# SCRIPT
     label begin:
     # Classroom scene
-    scene bg classroom
+    scene bg classroom with fade
+    #show valeria neutral with dissolve
     "Professor"  "And that’s the end of our unit… "
     "Time for last-minute announcements. I quietly twirl my pencil with my fingers and peek over at the clock. 3:59 PM."
     "Today’s combination of humidity and heat has somehow made its way into the classroom. The faint rumbling of the useless air conditioning competes with my professor for my attention."
@@ -79,15 +135,17 @@ label start:
     "An eruption of shuffling commences. I sling my backpack over my shoulder and rush out of the classroom."
 
     # Campus scene
-    scene bg campus with dissolve
-    show valeria neutral at center
-    show darren neutral at offscreenright
+    scene bg campus with fade
+    show valeria neutral at center with dissolve
+    show darren happy at offscreenright
     "The moment I leave the building, the heat hits me with full force. My first instinct is to fan myself with my notebook, but it barely offers any comfort."
     label campus:
     d "Valeria!"
     "Despite the weather, it’s hard not to smile when I see Darren waiting for me beneath the shade of the tree next to the building."
     show valeria neutral at left with move
-    show darren neutral at right with move
+    hide valeria neutral
+    show valeria happy at left with dissolve
+    show darren happy at right with ease
     v "Hey Darren! What’s up?"
     d "The usual. All of my classes are wrapping up and everyone’s talking about finals. I’m guessing it’s the same for you."
     d "Hey, if you need help with some of the classes we have together, we could study together. It’d be a lot more fun than studying alone."
@@ -112,7 +170,8 @@ label start:
 
     # Office scene
     label advisor:
-    scene bg office with dissolve
+    scene bg office with fade
+    #show valeria neutral with dissolve
     "Advisor"  "Valeria. I hope your day went well."
     "He nods at me in acknowledgement as I sink into the seat facing his desk. I search for a halfhearted grin to put on my face, but nothing sticks."
     "Between my advisor’s pestering and the ever-present reminders of my stress, I hate coming in here."
@@ -122,6 +181,9 @@ label start:
     "Advisor" "Valeria, listen to me. You’re failing three of your required courses. Your finals are coming up as well, and I’m afraid that if this continues you won’t qualify for your scholarship anymore."
     "I sit there, staring stupidly at the imperfect grooves etched into the surface of his wooden desk. Waiting for the news to hit me."
     "And then –"
+    #show valeria shocked with dissolve
+    #pause(3)
+    #show valeria neutral with dissolve
     v "You’re kidding."
     "Everything I’d achieved in high school: top of the class, making my parents proud. Everything I’d achieved, hanging by a thread over a cliff."
     v "I – I knew I wasn’t doing well, but I didn’t know it was {i}this{/i} bad. And now you’re telling me I’m about to drop out."
@@ -131,12 +193,14 @@ label start:
     #Valeria is at her desk in her apartment.
     label night1:
     scene bg desk with fade
+    #show valeria neutral with dissolve
     "The sun dips below the skyline as I drum my fingers against my desk, contemplating the psychology textbook next to my laptop."
     "It’s been a few hours since I met with my advisor, and I still can’t believe it. I breezed through high school easily enough; how did I fail so miserably in college?"
     "I don’t even want to think about what my parents will say."
     "My phone lights up with a new text message. Relieved by the interruption, I pick it up."
 
     # The phone pops up with a message, so the following dialogue is through text (format pasted from the premade messaging system found in the design document. The rest of that system will have to be pasted into The Death Contract game.)
+    #hide valeria neutral with dissolve
     call phone_start
     call message_start("Darren", "V, don’t forget the psychology reading tonight.")
     call message_start("Darren", "Just a reminder because you forgot last time!")
@@ -194,11 +258,13 @@ label start:
     "The other person remains silent, like they’re waiting for me to speak first."
     v "Hello? This is Valeria Jimenez."
     v "You’re not just messing with me, right?"
-    label debug:
     scene bg desk
     # The Entity appears in person. Valeria has a shocked expression. We could also consider adding in animations, like a screen shake to indicate shock.
     with flash
-    show entity neutral at center
+    show entity neutral at center with dissolve
+    #show valeria shocked at left
+    #show entity neutral at right
+    #with dissolve
     e "Hello, Valeria." with vpunch
     v "What the — "
     e "Don’t be scared. I was the one texting you."
@@ -272,6 +338,7 @@ label start:
     scene bg classroom with fade
     show valeria neutral at left
     show darren neutral at right
+    with dissolve
     "The next morning, I join Darren at our usual seats near the middle of the class."
     "With finals coming up, the room is packed today with students scrambling to cram as much psychology knowledge into their brains as possible."
     "The image of frantic students flipping through scattered notes is so jarringly normal, I almost forget the bizarre events of last night."
@@ -306,11 +373,17 @@ label start:
         "Defend Darren":
             # Choice 2, minor gain of Morality and Friendship
             $stats.add_both(1)
+            hide valeria neutral
+            show valeria angry at left
+            with dissolve
             "I turn around to glare at the person. They roll their eyes."
             "Student" "What? It’s true."
             v "At least he studies. What’s your grade in this class?"
             "Student" "I – you don’t need to know that!"
             "Darren stays silent, but a small smile appears on his face."
+            hide valeria angry
+            show valeria neutral at left
+            with dissolve
     # End of choices
 
     "The lecture continues. As usual, Darren studiously writes in and organizes his color-coded notes."
@@ -318,8 +391,9 @@ label start:
     "Before long, class ends and I’m gathering my things, wondering what I should do before my next class."
     "Professor" "Miss Jimenez, can I speak to you for a moment?"
     d "I’ll wait outside."
-    show darren neutral at offscreenright with move
+    show darren neutral at offscreenright with ease
     hide darren neutral
+    show valeria neutral at center with ease
     "I stand by the professor’s desk and patiently wait as he chats with a few students who have questions about a future quiz."
     "Wait a second."
     "A quiz?"
@@ -340,9 +414,15 @@ label start:
         "Take a photo":
             # Choice: Take a picture of the key
             $stats.add_morals(-2)
+            hide valeria neutral
+            show valeria sad
+            with dissolve
             "I nervously scan my surroundings just to reconfirm that I’m alone. I slip my phone out of my pocket."
             "For a moment, I think I hear the professor’s footsteps. I fumble with my camera app, swearing under my breath."
             v "Got it."
+            hide valeria sad
+            show valeria neutral
+            with dissolve
         "Don't take a photo":
             # Choice: Ignore it
             "I can already hear my mother’s scolding, my father’s tone of disappointment. I’ve never cheated my entire school career, and I don’t think I’m about to start now."
@@ -370,6 +450,9 @@ label start:
         "Interrupt and lash out":
             # Choice: Interrupt and lash out
             $stats.add_morals(-1)
+            hide valeria neutral
+            show valeria angry
+            with dissolve
             v "I don’t care."
             "The professor stops talking abruptly."
             "Professor" "Excuse me?"
@@ -394,6 +477,9 @@ label start:
                 "Calm down and leave":
                     # Choice: Calm down and leave
                     $stats.add_morals(1)
+                    hide valeria angry
+                    show valeria neutral
+                    with dissolve
                     "I take a deep breath and close my eyes. Okay, hold on. Maybe this isn’t the smartest move for me to take."
                     "The professor patiently waits for me to finish."
                     v  "I’m sorry. I’m going to go now."
@@ -596,7 +682,6 @@ label start:
 
     "Maybe if I manage to find him at all today, he’ll tell me face-to-face why he flaked on me."
 
-
     # Library scene
     label library:
     scene bg library with fade
@@ -681,6 +766,7 @@ label start:
 
     # Choice: Tell him the truth (Friendship Gain)
     label labelTruth:
+    $stats.add_friendship(1)
     call phone_after_menu
     call message_start("me", "Not very well.")
     call message("Darren", "What do you mean?")
@@ -691,6 +777,7 @@ label start:
 
     # Choice: Lie (Friendship Loss)
     label labelLie:
+    $stats.add_friendship(-1)
     call phone_after_menu
     call message_start("me", "It went well.")
     call message("Darren", "Really?")
@@ -777,6 +864,400 @@ label start:
 
 # Day Three
 
+# General course of events regardless of route
+#Scene 1: Going to class, conversation with Darren
+#Scene 2: A conversation with the entity in the bedroom that either reinforces Valeria’s pride and actions, or causes her to fight against it
+#Scene 3: Meeting Darren in the library to help him write his speech
+
+    if stats.get_friendship < 0 and stats.getmorals < 0:
+        jump route3_1
+    if stats.get_friendship >= 0 and stats.getmorals >= 0:
+        jump route3_2
+    else:
+        "Something went wrong"
+        return
+
+# Route 1 Low Friendship, Low Morality
+    label route3_1:
+    #//Grayscale background?
+    "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
+    "That made me feel… confident. Needed."
+    "But now? I’m watching him breeze through life with his rich parents and good grades while I’m finding myself dead in the water."
+    "Everyone’s constantly rubbing in how Darren is such an excellent student and we should study together. He might offer to help me because we’re friends, but I know it’s also because he pities me."
+    "I helped him get to where he is now. And I deserve more than I’m getting."
+
+    # Classroom scene
+    scene bg classroom with fade
+    show valeria neutral at left
+    show darren neutral at right
+    with dissolve
+    "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
+    "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
+    "Occasionally, I scowl in Darren’s direction. He doesn’t seem to notice, but that only fuels my anger."
+    "Professor" "I hope you’re all prepared for our discussion today: the theme of betrayal!"
+    "My ears burn. What a fitting topic."
+    "Professor" "Now, there are multiple instances of betrayal throughout the poem…"
+    "Darren nudges me, temporarily distracting me from the lecture at hand."
+    d "Hey Valeria, if you don’t mind… could you meet me in the library later? Elections aren’t until next week, but… I kind of want to get my speech out of the way."
+    "The request comes out slow and hesitant, like he hasn’t forgotten the hostility I showed over text last night."
+
+    menu:
+        "Accept, with attitude":
+            # Choice: Accept, with attitude
+            v "Shh. The professor’s lecturing on Achilles’ betrayal of Agamemnon. You should show some respect."
+            d "Come on…"
+            v "Fine, sure. Maybe I’ll suddenly be busy and won’t show up though. Just to keep you on your toes."
+            "Darren sighs, but he leaves me alone after that."
+            # Return to main route
+        "Offer an abivalent answer":
+            # Choice: Offer an ambivalent answer
+            v "Oh, I might be busy. Can’t say for sure."
+            "Darren furrows his brow, clearly annoyed at my non-answer."
+            d "Fine. I’ll see you if you’re able?"
+            v "Yup, whatever."
+            # Return to main route
+        "Decline":
+            # Choice: Decline
+            v "No. I’ve got better things to do."
+            d "Are you still mad at me? I’m sorry, okay? I’ll give you a proper apology later, I just really need your help right now."
+            d "Please?"
+            "Well… if I can find a way to ruin his speech, it would go a long way to saving my soul."
+            v "Maybe, then. I won’t make any promises."
+            # Return to main route
+
+    "Professor" "… and there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
+    "Professor" "It’s incredible how pride can drive someone to such lengths. No wonder it’s considered a deadly sin."
+
+    menu:
+        "Raise hand":
+            # Choice: Raise hand
+            "I’m struck by the sudden need to defend Achilles and his decision. After all, he had a valid reason to refuse bowing down to Agamemnon."
+            "Professor" "Yes, what do you have to say?"
+            v "Isn’t it really harsh to judge Achilles and simply call him prideful?"
+            "Professor" "Go on."
+            v "Well, Achilles has every right to stand up for himself. Agamemnon isn’t exactly the greatest of the bunch. Meanwhile, Achilles is the best warrior in the army."
+            "Darren jumps into the conversation, like he can no longer bear staying silent."
+            d "Still, it’s like the professor said: there are more important things going on. Achilles should put aside his pride. Lives are at stake."
+            v "So you’re siding with Agamemnon? The man who shouldn’t be in charge in the first place? He is every bit as prideful as Achilles, but he never proves himself the same way Achilles does."
+            "Darren opens his mouth to reply, but he seems to be at a loss for words. He takes in a deep breath and closes his mouth, signaling an end to the conversation."
+            "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand again. Instead, he quietly contemplates the pages of his book."
+            # Return to main route
+        "Don't raise hand":
+            # Choice: Don’t raise hand
+            "I can’t think of what to say. I never really was the type to participate in class, anyway."
+            "The professor continues pushing us to examine the betrayal between Achilles and Agamemnon."
+            "Eventually, I come to my own conclusions. As the greatest warrior in the army, Achilles has every right to stand up for himself. Agamemnon never proves himself; he is beneath Achilles."
+            "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand at all. Instead, he quietly contemplates the pages of his book."
+            # Return to main route
+
+    "I’m not sure if he’s absorbing anything that the professor is saying."
+
+    # Valeria’s Bedroom
+    label bedroom3_1:
+    scene bg bedroom with fade
+    "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and the less time I spend with Darren, the better."
+    show entity neutral with dissolve
+    e "Hello, Valeria."
+    "This time, the materialization out of thin air doesn’t faze me."
+    v "What do you want {i}this{/i} time?"
+    e "Oh, nothing more than what you’re already supplying. You’re doing an excellent job."
+    e "Despite all of the support you’ve given him, it seems our dear friend Darren isn’t so eager to return the favor, is he?"
+    "I grit my teeth. It hurts, but it’s the unkind truth."
+    v "I’ve been helping him since high school, and {i}this{/i} is how he decides to thank me."
+    e "Even {i}I’m{/i} appalled, and I’m a {i}demon{/i}. At the very least, I’m honest and I keep my promises."
+    e "But now… you see? He clearly doesn’t need you. And now, the feeling is mutual."
+    v "That son of a — "
+    "I get up mid-sentence and sling my backpack over my shoulder. The entity curls a shadowy hand around the back of my chair, watching me curiously."
+    e "What will you do now?"
+    "I stalk towards the door and grip the cool metal of the knob tightly."
+    v "I’m going to ruin the rest of his life."
+
+    # Library
+    label library3_1:
+    scene bg library with fade
+    show valeria angry at left with move
+    "I enter the library in a haze of anger."
+    show darren neutral at right with dissolve
+    "Darren gives me a halfhearted wave when he spots me, like he can perceive the anger that rolls off of me in an all-encompassing aura."
+    d "Hey, I wanted to apologize for yesterday — "
+
+    menu:
+        "Stop him":
+            # Choice: Stop him
+            v "Save it."
+            d "Wh- What?"
+            v "I said, {i}save it{/i}. I’m not interested in what you have to say anymore. I’m only here to fulfill a promise, nothing more."
+            "Darren furrows his brow and breaks eye contact from me. He doesn’t say anything for a very long time."
+            "Nevertheless, I pull out my laptop and start a new document."
+            v "Let’s get this over with."
+            # Return to main route
+        "Listen to his apology":
+            # Choice: Listen to his apology
+            d "I, uhm. This is embarrassing to admit, but I was getting anxious."
+            d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
+            d "I couldn’t move. I couldn’t do it."
+            d "To be clear, this isn’t an excuse. I was supposed to be helping you. It’s just… an explanation. For why I wasn’t there when I should have been."
+            d "You’ve also been acting really weird these past few days. It feels like I hurt you somehow, and I don’t know what I did, but whatever I did, I just want to say…"
+            d "I’m sorry."
+            menu:
+                "Ridicule him":
+                    # Choice: Ridicule him
+                    "I scoff."
+                    v "You were {i}scared{/i}? Don’t you know what you signed up for?"
+                    d "Yeah, but —"
+                    v "You’re running for student body president. You should have known you were going to have to do this sort of thing."
+                    v "The only way you’re gonna be able to build up support is if you promote yourself. Which you’re now telling me you’re scared to do."
+                    v "What will everyone think when they realize you’re just a coward?"
+                    "Darren stares at me, mortified, with no words left to grasp at. Ignoring him, I pull out my laptop and open a new document."
+                    v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
+                    # Return to main route
+                "Reject his apology":
+                    # Choice: Reject his apology
+                    v "I don’t care."
+                    d "I’m sorry?"
+                    v "I don’t want your apology. It’s not fit for me to accept."
+                    d "What — what do you want me to do? Grovel at your feet? How am I supposed to apologize further when I don’t know what else I did to you!"
+                    v "Maybe I would’ve accepted some grovelling before, but I don’t want it anymore. I’m here to do this one final thing for you, and after that, we’re finished."
+                    "Darren narrows his eyes at me. Ignoring him, I pull out my laptop and start a new document."
+                    v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
+                    jump route4_1
+                    # Return to main route
+
+# Route 3 High Friendship, High Morality
+    "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
+    "That made me feel… confident. Needed."
+    "We’ve switched places now. He’s soaring to higher heights than I’d ever reached. All I can do is look up."
+    "Still… he’s trying to pull me up. He might have an insufferable know-it-all streak to him, but he’s a good person, through and through."
+    "I’m still not sure why he flaked on me, but there has to be a reasonable explanation."
+    "If I’ve realized anything from my success in high school and subsequent failure in college, it’s that people aren’t just what they appear to be."
+
+    # Classroom scene
+    scene bg classroom with fade
+    show valeria neutral at left
+    show darren neutral at right
+    with dissolve
+    "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
+    "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
+    "Occasionally, I try to establish eye contact with Darren, but he doesn’t seem to notice. Or he’s ignoring me. Did I hurt him with my texts last night?"
+    "Wish I had telepathy."
+    "Professor" "I hope you’re all prepared for our discussion today: the theme of redemption!"
+    "Right as I’m about to give up trying to communicate with Darren, he nudges me."
+    d "Hey Valeria, if you don’t mind… could you meet me in the library later? Elections aren’t until next week, but… I kind of want to get my speech out of the way."
+    "The request comes out slow and hesitant, like he’s carefully trying to walk on eggshells without breaking them."
+
+    menu:
+        "Accept":
+            # Choice: Accept
+            "If there’s any way to ensure Darren succeeds in winning the hearts of the student body, this would be it."
+            "I’m ashamed of the fact that I accepted a deal to hurt him for my own gain. But maybe I can make up for what I did."
+            v "You know what? I have a better idea."
+            d "Like what?"
+            # Return to main route
+        "Decline":
+            # Choice: Decline
+            "By now, I’m wary about my role in assisting Darren’s campaign. Clearly this speech is another chance for me to sabotage his work."
+            v "I… I don’t think that’s a good idea."
+            d "Why?"
+            "How can I explain the contract I made with a demonic entity in the most normal way possible? And how can I explain that I was ready to hurt him?"
+            "I just don’t trust myself with the responsibility of helping him write that speech."
+            "…"
+            "Maybe I can spin this another way."
+            # Return to main route
+
+    v "I think you can write the speech. I mean, obviously I’ll proofread and all that. But I think you can write the speech yourself."
+    d "What?"
+    v "Yeah! You can write well; I’ve seen your persuasive essays. You can practice your speech on me, but I think you can write it yourself."
+    d "But what if I mess it up?"
+    v "No way, just look at you! How can you mess it up? You’ve been passionate about making the campus a better place for students ever since we started attending classes here."
+    v "I believe in you."
+    "Darren frowns at me, but I’m forced to shut up when the professor shoots a stern look in my direction."
+    "Professor" "Now… there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
+    "Professor" "And yet, he somehow redeemed himself in the end. How?"
+
+    menu:
+        "Raise hand":
+            # Choice: Raise hand
+            "I’m struck by the sudden need to answer the question. After all, Achilles didn’t redeem himself without help."
+            "Professor" "Yes, what do you have to say?"
+            v "I think a lot of that had to do with not just his actions, but also Patroclus’."
+            "Darren raises an eyebrow."
+            "Professor" "Go on."
+            v "Patroclus’ actions open up that possibility of redemption. His death causes Achilles to do some unspeakable things, but in turn, I think Patroclus’ love redeemed Achilles."
+            v "That’s all I wanted to say."
+            "Professor" "Interesting contribution! Anyone else want to add on?"
+            # Return to main route
+        "Don't raise hand":
+            # Choice: Don’t raise hand
+            "I can’t think of what to say. I never really was the type to participate in class, anyway."
+            "The professor continues pushing us to examine Achilles and his love for Patroclus."
+            "Eventually, I come to my own conclusions and write them down. Achilles doesn’t redeem himself without help. Patroclus’ actions open up that possibility of redemption."
+            # Return to main route
+
+    "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand at all. Instead, he quietly contemplates the pages of his book."
+    "Still, something tells me he’s listening."
+    "We’re going to make this happen."
+
+    # Valeria’s Bedroom
+    label bedroom3_3:
+    scene bg bedroom with fade
+    "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and I might as well collect my thoughts alone."
+    show entity neutral with dissolve
+    e "Hello, Valeria."
+    "This time, the materialization out of thin air doesn’t faze me."
+    v "Hello."
+    e "I must say, I’m fairly disappointed in your progress. The election is coming up soon, and you’re no closer to destroying Darren’s prospects."
+    e "Almost as if you refuse to."
+    v "That’s my intention, yes."
+    "The entity doesn’t immediately reply, but curls its shadowy fingers, one by one, around the back of my chair. I ignore the sudden chill the crawls along my shoulder."
+    e "Let me remind you of the terms of our contract — "
+    v "You don’t have to remind me. I still remember."
+    "The entity snorts."
+    e "You would give up your life — your {i}soul{/i} — for your friend?"
+    v "What kind of friend would I be if I made him miserable instead?"
+    "I get up and sling my backpack over my shoulder. The entity watches me curiously."
+    e "What will you do now?"
+    "I meet its unblinking stare before I open the door, smiling slightly."
+    v "I’m gonna help my friend."
+
+    # Library
+    label library3_3:
+    scene bg library with fade
+    show valeria neutral at offscreenleft
+    show valeria neutral at left with ease
+    "I enter the library in a laser-focused mindset of determination."
+    show darren neutral at right with dissolve
+    "Darren waves when he spots me, but his hand moves a little slower than usual. The movement is almost sheepish, like he has half a mind to shrink in his seat."
+    d "Hey… I wanted to apologize. For yesterday, that is."
+    "He pauses mid-thought, struggling with the words he wants to say. I patiently wait for him to continue."
+    d "The reason why I didn’t meet up with you was because… well, I was getting anxious."
+    d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
+    d "I couldn’t move. I couldn’t do it."
+    d "To be clear, this isn’t an excuse. I was supposed to be helping you. It’s just… an explanation. For why I wasn’t there when I should have been."
+    d "And I know that hurt you. I don’t blame you."
+    d "I’m sorry."
+
+    menu:
+        "Ask why he didn't tell you":
+            # Choice: Ask why he didn’t tell you
+            v "Darren, if you’d told me yesterday that you couldn’t do it, I would’ve understood. Why didn’t you?"
+            "Darren lets out a hollow laugh."
+            d "It’s so dumb now that I think about it, but I was just scared to tell you."
+            v "That isn’t dumb."
+            d "Thanks."
+            # Return to main route
+        "Ask if he still wants to run":
+            # Choice: Ask if he still wants to run
+            v "Thanks. The fact that you’re trusting me with this means a lot."
+            v "Not to put too fine a point on it, but running for student body president is all about promoting yourself. Do you still want to… ?"
+            "Darren sighs."
+            d "Yeah. I really want to make a difference, you know?"
+            d "I just need to get better at talking to people. And fast, if I want to start promoting myself before elections next week."
+            # Return to main route
+
+    v "Well at any rate, I accept your apology. I won’t lie, I was definitely confused and hurt, but I’m glad you came to me."
+    v "For the record, I meant every word I said earlier. About believing in you. You should believe in yourself, too."
+    d "Claiming that I believe in myself is one thing. Actually believing in myself is another."
+    v "Then believe in me, because I believe in you."
+    show darren happy at right with dissolve
+    show darren neutral at right
+    "The corner of Darren’s mouth twitches upwards."
+    d "That’s a bit roundabout."
+    v "Well, you gotta believe in someone, don’t you?"
+    v "I know you’re gonna do some great work as president, Darren."
+    d "I hope so."
+    label debug:
+    "I pull out my laptop and start a new document."
+    v "Here. You dictate. I’ll write. Make this speech your own."
+    v "And count me as your second-in-command this week. I’m gonna be right there beside you, making people realize you’d be the best president in the history of this college."
+    d "… Thanks, Valeria. {w=1.0} For everything."
+    jump route4_3
+
+# Day Four (Election Day, a week later)
+
+# General course of events regardless of route
+# Scene 1: Darren gives his speech in the auditorium, then has a conversation with Valeria
+
+    label route4_1:
+    # Route 1 Low Friendship, Low Morality
+    scene bg auditorium with fade
+    "Come Election Day, I join the crowds of students gathered to hear the candidates’ speeches."
+    "Even after \"assisting\" Darren in writing the worst, most half-assed speech in the history of speeches, I have to wonder if he’s stubborn enough to make an appearance."
+    "Student 1" "Did you notice? The ballots still have Darren’s name on it."
+    "Student 2" "I never even saw him around campus. I saw all of the other candidates… but never him."
+    "Student 1" "He’s still going to class, but he snapped at the first person who tried asking him. First time I think {i}anyone{/i} ever saw him angry."
+    "Interesting. He’s been dutifully avoiding the classes we share."
+    "A hush comes over the audience. One of the faculty members has walked on stage and approached the mic."
+    "Faculty Member" "Good morning, everyone. Unfortunately, Darren Romero, who was previously running for student body president, has dropped out of the race. Please disregard his name on the ballot when voting."
+    "The whispers in the audience increase in volume. As everyone gossips about this new development, my phone vibrates in my pocket."
+
+    call phone_start
+    call message_start("Unknown", "The terms of the contract have been met. You’ll get to keep your scholarship.")
+    call message_start("Unknown", "Congratulations, Valeria Jimenez. It was a pleasure working with you.")
+    call reply_message("The pleasure was all mine.")
+    call phone_end
+
+    "With my freedom finally confirmed, I begin walking away from the assembled students. Each step I take feels lighter than the last."
+    "I’m never failing again."
+    "Meanwhile, somewhere else on campus, Darren Romero’s failures have only just begun."
+    jump end1
+
+    # Route 3 High Friendship, High Morality
+    label route4_3:
+    scene bg auditorium with fade
+    "Come Election Day, I join the crowds of students gathered to hear the candidates’ speeches."
+    "This past week has simultaneously been the most stressful and the most rewarding week I’ve ever experienced."
+    "Darren managed to write up a speech all on his own — and, in my humble opinion, it was one of the best speeches I’d ever heard, even after I had to sit through fifty of Darren’s speech recitations."
+    "I eavesdrop on the students around me, trying to gauge their feelings and reactions."
+    "Student 1" "Man, I’m tired. All of those speeches…"
+    "Student 2" "Hey, last person’s coming up, though! You have anyone in mind yet?"
+    "Student 1" "I’m leaning towards Darren."
+    "Student 2" "Wow, decided already? He hasn’t even given his speech yet."
+    "Student 1" "I know you’re just joking, but he came up to me the other day and recognized me. Knew that I’d been trying to push for more resources that help freshmen transition into college because of my younger sister."
+    "Student 2" "He’s pretty friendly, isn’t he? I always assumed he was a teacher’s pet who only liked talking to the professors, but when I actually met him, he was surprisingly approachable."
+    "Student 1" "Yeah! Not to mention he has a clear and concise plan for how he can help us as president. I really hope he wins."
+    "I let out a sigh of relief. Glowing reviews, all around. Hopefully."
+    "A hush comes over the audience. I spot Darren striding across the stage towards the mic."
+    show darren happy at offscreenleft
+    show darren happy with ease
+    "He’s the very picture of confidence."
+    d "Good morning, everyone! As you all know, I’m Darren Romero, and I’m running for student body president…"
+    "Darren plunges into his speech. I know the words by heart, but something about the way he seems to make eye contact with everyone in the audience, something about the way his voice carries through…"
+    "The exhilaration of being on a stage has transformed his words."
+    "All around me, college students listen quietly, enraptured. Somehow, Darren has done the impossible."
+    d "… And that’s why I believe I can be your next student body president. So vote for me, Darren Romero! Thank you!"
+    "Everyone erupts into cheers, cheers that are much louder than any reception the other candidates have received."
+    "I smile to myself. Suffice it to say, there’s no need to wait until the ballots get counted to know that Darren has won the vote."
+    "Right on cue, my phone vibrates in my pocket. I’ve been waiting."
+
+    call phone_start
+    call message_start("Unknown", "The terms of the contract were not met. You will forfeit your scholarship, life, and soul to me.")
+    call reply_message("I’m not scared of you.")
+    call message_start("Unknown", "Then you’re a fool.")
+    call message_start("Unknown", "Before I take over your pitiful existence, I would like to know why.")
+    call reply_message("Guess it couldn’t hurt to explain why I decided to defy the wishes of an immortal demon, huh?")
+    call message_start("Unknown", "You are wasting your time, my dear Valeria. I would talk, and talk fast.")
+    call reply_message("He’s my friend. My soul isn’t worth anything without my friendship to Darren.")
+    call message_start("Unknown", "You would truly have such a low opinion of yourself?")
+    call reply_message("Your contract called for just one soul — mine.")
+    call reply_message("But what happens when my soul is connected to another? And another? One connection for each friendship I have.")
+    call reply_message("Unless I cut those ties, you won’t be receiving one soul. You’ll be receiving the pieces of many more.")
+    call reply_message("Your contract was flawed from the start.")
+    call message_start("Unknown", "…")
+    call phone_end
+
+    "Somewhere in the back of my mind, I swear I can hear a low, skin-crawling chuckle."
+    call phone_start
+    call message_start("Unknown", "You are an interesting human, Valeria Jimenez.")
+    call message_start("Unknown", "Congratulations; you have tricked me. Not many can say the same.")
+    call message_start("Unknown", "You are no longer bound to this faulty contract. Enjoy the rest of your life.")
+    call phone_end
+
+    "With my freedom finally confirmed, I begin walking away from the assembled students. Each step I take feels lighter than the last."
+    "I’m still in danger of failing three classes, still in danger of losing my scholarship… but… "
+    "From here, I can see Darren waving, beaming with pride and looking towards the future."
+    "I still have my life. And I know I made the right choice."
+    jump end3
+
 #################### TEST AREA BELOW ########################
     jump endgame
 
@@ -789,11 +1270,34 @@ label start:
 
     # These display lines of dialogue.
 
-    "TEST VERSION. PLEASE IGNORE ANY LOGIC IN THIS."
+####################    End Cards    ########################
 
     label game_over:
         scene game_over with fade
         ""
+        return
+
+    label end1:
+        scene end1 with fade
+        pause
+        return
+
+    label end3:
+        scene end3 with fade
+        pause
+        return
+
+    label credits:
+        show bg black with fade
+
+    label extra_end:
+        scene end5 with fade
+        show valeria happy
+        show darrent happy at left
+        show entity neutral at right
+        v "Welcome to the extra section!"
+        d "So how was the game?"
+        e "Placeholder text"
 
     label endgame:
     # This ends the game.
