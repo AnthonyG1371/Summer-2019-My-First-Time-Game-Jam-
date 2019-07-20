@@ -62,7 +62,7 @@ label start:
     # define and instantiates protagonists' stats
     python:
         stats = main_stats()
-    jump bedroom3_3 #DEBUG
+
     if not tester:
         jump begin
 
