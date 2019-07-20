@@ -5,6 +5,7 @@
 # v0.002 alpha     Added the draft script for Night One. Added placeholder images.
 # v0.010 alpha     Main menu and game resizing completed.
 # v0.020           Added working script up to the end of day 2.
+# v0.900           Completed 2 endings. Added simple credits.
 
 #------------------------------------------------
 # NOTES ON MORLITY AND FRIENDSHIP POINTS
@@ -28,12 +29,24 @@
 #111311 = 8 FRIENDSHIP -110311 = -7 FRIENDSHIP
 #-----------------------------------------------
 
+# Things that may need to be worked on
+# Credits
+# Music
+# Sound
+# Scene Select
+# 2nd campus background
+# high school classroom background
+# advisor, professor, and misc student sprites
+# Extra Ending?
+
 define v = Character("Valeria")
 define d = Character("Darren")
 define e = Character("Unknown", color = "#800000") #maroon
 
-define tester = False
+define tester = True
 $join_lunch = True
+
+image classroom_gray = im.Grayscale("bg classroom.jpg")
 
 # define screen effects
 define flash = Fade(0.1, 0.0, 0.5, color="#fff")
@@ -111,9 +124,8 @@ label start:
                     jump route4_1
                 "Route 3: High Friendship & Morality":
                     jump route4_3
-        "Debug Test":
-            jump test_space
-
+                "Back":
+                    jump debug_menu
         "Debug":
             jump debug
 
@@ -127,7 +139,7 @@ label start:
     "Today’s combination of humidity and heat has somehow made its way into the classroom. The faint rumbling of the useless air conditioning competes with my professor for my attention."
     "All that tuition money, and the university {i}still{/i} can’t be bothered to get a better air conditioner."
     "At least I’m here on scholarship."
-    "A calendar reminder lights up my phone screen: {i}ADVISOR MEETING IN TEN MINUTES{/i}."
+    "A calendar reminder lights up my phone screen: {w=0.5} {i}ADVISOR MEETING IN TEN MINUTES{/i}."
     "Professor"  "Don’t forget, the final exam is coming up. If you have any questions, come to the study session that’s in a few days, or schedule an appointment with me."
     "My pencil twirling slows to a stop. Study session, huh?"
     "Well, I’ve made it this far into the year juggling a part-time and my classes. I’m sure I’ll be fine without the study session. I just wish I didn’t have to hear about finals ever again."
@@ -144,7 +156,7 @@ label start:
     "Despite the weather, it’s hard not to smile when I see Darren waiting for me beneath the shade of the tree next to the building."
     show valeria neutral at left with move
     hide valeria neutral
-    show valeria happy at left with dissolve
+    show valeria happy at left
     show darren happy at right with ease
     v "Hey Darren! What’s up?"
     d "The usual. All of my classes are wrapping up and everyone’s talking about finals. I’m guessing it’s the same for you."
@@ -203,7 +215,7 @@ label start:
     #hide valeria neutral with dissolve
     call phone_start
     call message_start("Darren", "V, don’t forget the psychology reading tonight.")
-    call message_start("Darren", "Just a reminder because you forgot last time!")
+    call message("Darren", "Just a reminder because you forgot last time!")
     call phone_end
 
     "I roll my eyes. Of course."
@@ -216,7 +228,8 @@ label start:
 
     call phone_start
     call message_start("Unknown", "Hello.")
-    call message_start("Unknown", "Many college students are in your situation, you know. It’s easy to fall when you’re alone and away from home. It feels a bit like the world’s against you, doesn’t it?")
+    call message("Unknown", "Many college students are in your situation, you know. It’s easy to fall when you’re alone and away from home. It feels a bit like the world’s against you, doesn’t it?")
+    call message("Unknown", "I could offer you a solution, if you're interested.")
     call reply_message("Who is this?")
     # Label names here are placeholders
     call screen phone_reply("I think you’ve got the wrong number.","label1","What do you mean by interested?","label2")
@@ -267,11 +280,16 @@ label start:
     #with dissolve
     e "Hello, Valeria." with vpunch
     v "What the — "
+    scene bg bedroom night
+    show valeria shocked at left
+    show entity neutral at right
+    with dissolve
     e "Don’t be scared. I was the one texting you."
     v "How the hell did you get in here?"
     e "I’m here to offer you a solution, Valeria."
     v "A solution to what? You just came out of my {i}phone{/i}! You expect me to just calmly hear you out?"
     e "Then let me explain. You need help, don’t you?"
+    show valeria angry at left with dissolve
     v "I don’t need your help!"
     e "You’re on the verge of losing your scholarship. If you tell your parents, you’ll lose all their support, won’t you?"
     e "You can’t even vent to your best friend. It’s not like he would understand. His professors love him, and he’s able to afford this school. Unlike you."
@@ -321,6 +339,7 @@ label start:
 
     # Choice 2
     label accept_deal:
+    show valeria neutral at left with dissolve
     "I’m desperate. What else can I do? I dug myself into this hole, and now there’s a rope being lowered just for me."
     "All I have to do is avoid failure. Simple enough."
     v "Alright then, I accept."
@@ -335,10 +354,10 @@ label start:
 # Day 2
     label day2:
     # Classroom
-    scene bg classroom with fade
+    scene bg classroom
     show valeria neutral at left
     show darren neutral at right
-    with dissolve
+    with fade
     "The next morning, I join Darren at our usual seats near the middle of the class."
     "With finals coming up, the room is packed today with students scrambling to cram as much psychology knowledge into their brains as possible."
     "The image of frantic students flipping through scattered notes is so jarringly normal, I almost forget the bizarre events of last night."
@@ -373,17 +392,16 @@ label start:
         "Defend Darren":
             # Choice 2, minor gain of Morality and Friendship
             $stats.add_both(1)
-            hide valeria neutral
-            show valeria angry at left
-            with dissolve
+            show valeria angry at left with dissolve
             "I turn around to glare at the person. They roll their eyes."
             "Student" "What? It’s true."
             v "At least he studies. What’s your grade in this class?"
             "Student" "I – you don’t need to know that!"
-            "Darren stays silent, but a small smile appears on his face."
-            hide valeria angry
-            show valeria neutral at left
+            show darren happy at right
+            show darren neutral at right
             with dissolve
+            "Darren stays silent, but a small smile appears on his face."
+            show valeria neutral at left with dissolve
     # End of choices
 
     "The lecture continues. As usual, Darren studiously writes in and organizes his color-coded notes."
@@ -501,9 +519,10 @@ label start:
     # Return to main route
 
     label campus2:
-    scene bg campus with fade
+    scene bg campus
     show valeria neutral at left
     show darren neutral at right
+    with fade
     "I find Darren waiting outside, eyes glued to his phone and fingers rapidly texting away. The moment he hears the door open, he looks up and grins at me."
     "Even though I’m more than a little miffed at the professor’s talk, I give Darren a little wave."
     d "Ready for lunch? There’s a cool new spot near campus I wanted to check out."
@@ -516,7 +535,9 @@ label start:
             $join_lunch = False
             "After what the professor just said to me, I think the last thing I want to do right now is hang out with Darren."
             v "Sorry Darren, I think I wanna take this lunch alone."
+            show darren sad at right with dissolve
             "Darren frowns a little, but he shrugs."
+            show darren neutral at right with dissolve
             d "That’s okay. I just wanted to tell you something. I was gonna tell you yesterday, but you had your advisor meeting."
             # !!! not sure if this label works
             jump aftermenu2
@@ -527,12 +548,16 @@ label start:
             "My stomach growls at the thought of food."
             v "Let’s go, I’m starving."
             "Darren leads me to a part of campus that I’ve never seen before. The picturesque sight of a large oak tree sitting on a hill greets us. Sunlight pierces through the foliage at just the right angle."
+            show darren happy at right with dissolve
+            show valeria happy at left with dissolve
             d "Nice, right?"
             v "Are you kidding? It’s perfect."
             "We flop down onto a shady part of the grass. I dig through my bag in search for the chicken wrap I made this morning. It’s hard to resist the urge to scarf the entire thing down, but I take a big bite anyway."
             v "Mmmh… so good."
             "Darren chuckles as he reaches for his own lunch."
+            show valeria neutral at left with dissolve
             v "So… how did you find this place? Most of your classes are on the other side of campus."
+            show darren neutral at right with dissolve
             d "That’s true, but I came over here to set up some posters."
             v "Posters?"
             "Why would he need to put up posters?"
@@ -540,29 +565,31 @@ label start:
             "Tell me what?"
             "In the middle of my confusion, I recall what Darren hinted at yesterday before I went to meet with my advisor. He was about to tell me something then, but —"
     # Return to main route
-    # !!! (same as above) not sure if this label works
     label aftermenu2:
+        show darren happy at right with dissolve
         d "I’m running for student council president!"
+        show valeria shocked at left with dissolve
         "Woah."
         "I guess I shouldn’t be surprised. Ever since he set foot on this campus, he’s been pretty involved with the student government."
         "Still, the news manages to catch me off-guard."
         "Before I can open my mouth to reply, my phone vibrates in my pocket. I excuse myself for a moment to check."
 
-        hide valeria neutral
-        hide darren neutral
+        hide valeria shocked
+        hide darren happy
         with dissolve
 
         call phone_start
         call message_start("Unknown", "Remember what we talked about, Valeria?")
-        call message_start ("Unknown", "Now’s your chance.")
+        call message("Unknown", "Now’s your chance.")
         call phone_end
 
         show valeria neutral at left
-        show darren neutral at right
+        show darren happy at right
         with dissolve
 
         "… Right."
         "Darren is still grinning, completely oblivious, waiting for my response."
+        show valeria happy at left with dissolve
         "In an attempt to mask my rising anxiety, I plaster a fake smile on my face. I’m not sure if it’s more for his benefit or mine."
         v "That’s great news!"
         "I don’t know what else to say. All I can think of are the texts I just received."
@@ -582,22 +609,32 @@ label start:
                         "There’s that initial sting of impact, and then the satisfaction of a high-five well-done."
                         d "Now it’s virtually impossible for us to lose."
                     "Leave him hanging":
+                        show valeria neutral at left with dissolve
                         "I roll my eyes."
                         d "Aw, c’mon."
                         v "Let’s save that for {i}if{/i} you win, yeah?"
+                        show darren sad at right with dissolve
                         "Darren sighs and lets his hand drop back to his side."
                         d "Fair point, I guess."
             "Decline":
                 # Choice: Decline
+                show valeria sad at left with dissolve
                 "The thing that talked to me last night… it’s planning something, and I’m not sure if I like where it’s going."
                 v "I’d rather not."
+                show darren neutral at right with dissolve
                 d "Please? I’d seriously appreciate it if my best friend could help me with my campaign."
                 v "Don’t pull the best friend card on me."
                 "My phone vibrates in my pocket again."
+                hide valeria sad
+                hide darren neutral
+                with dissolve
                 call phone_start
                 call message_start("Unknown", "I do hope you haven’t forgotten.")
-                call message_start("Unknown", "You have no choice.")
+                call message("Unknown", "You have no choice.")
                 call phone_end
+                show valeria sad at left
+                show darren sad at right
+                with dissolve
                 "…"
                 d "Please?"
                 "Like it said: I have no choice."
@@ -605,6 +642,9 @@ label start:
                 v "Okay, okay. Fine, I’ll help you."
 
     # Return to main route
+    show valeria neutral at left
+    show darren neutral at right
+    with dissolve
     "I’m not sure if this is the worst idea I’ve ever had or the perfect opportunity, but there’s nothing I can do now."
     d "Actually, I think I have your first task at hand! You have some free time after lunch, right?"
     v "Yeah. What do you need?"
@@ -633,7 +673,6 @@ label start:
     "At any rate, Darren gave me a task. I’ll have to deal with that first."
 
     # Campus scene
-    # !!! new scene
     scene bg campus with fade
     show valeria neutral with dissolve
     "With my arms full of campaign materials, I enter the campus courtyard and start making my rounds."
@@ -662,7 +701,6 @@ label start:
     "It’s actually a valid question, though. Darren told me he would meet up with me, but it’s been a good fifteen minutes and I haven’t seen him at all. It’s {i}his{/i} campaign."
     "I’m rapidly getting tired of the general apathy and uncomfortable summer heat I’m experiencing. I’m not even getting paid. I could be studying instead."
     "There’s still a decent stack of promotional cards left, but I don’t want to deal with them anymore."
-    # !!! refer to red text in document, there is a choice for throwing the cards away or keeping them; put it here
 
     #Throw the rest away (Big Morality and Friendship loss)
     #Keep the rest to return to Darren (Big Morality and Friendship gain)
@@ -670,12 +708,11 @@ label start:
         "Throw the rest away":
             # Choice: Throw the rest away
             $stats.add_both(-3)
-            hide valeria neutral with dissolve
             show valeria angry with dissolve
             "I chuck the remainder of the promotional cards into a trash bin, lollipops and all, and dust my hands off."
             # Return to main route
         "Keep the rest to return to Darren":
-            $statss.add_both(3)
+            $stats.add_both(3)
             # Choice: Keep the rest to return to Darren
             "As annoyed as I am right now, I know Darren spent a lot of time and money on these cards. I’ll just stop promoting for now and hand them back to him later."
             # Return to main route
@@ -701,7 +738,7 @@ label start:
     # Ignore them
     menu:
         "Call out to the students":
-            show valeria neutral
+            show valeria neutral with dissolve
             # Choice: Call out to the students
             v "Hey! Are you guys talking about Darren Romero?"
             "Student 1" "Uh, yeah? Who else?"
@@ -725,7 +762,9 @@ label start:
                 "Defend Darren":
                     # Choice: Defend Darren
                     $stats.add_friendship(1)
+                    show valeria angry with dissolve
                     v "I don’t like the way you’re talking about my best friend."
+                    show valeria neutral with dissolve
                     "Even though I’m still annoyed with Darren, there has to be a good reason for why he didn’t show up. I have to trust in him."
                     "The student rolls their eyes."
                     "Student 1" "What I’m saying is true, though. Can you blame me?"
@@ -735,10 +774,11 @@ label start:
                     "Student 2" "Hey, just drop it okay? I’m looking to study, not get in a fight. I’m sorry about this one, they have a big mouth."
                     v "That’s okay."
                     "I’m not really looking to get into a fight either."
-        "Ignore them": # !!! double check to see if this choice works as intended
+        "Ignore them":
             "That student’s laughing at him, but I don’t want to engage with them. I have better things to worry about."
 
     # Return to main route
+    hide valeria neutral with dissolve
     "I open up my psychology textbook."
     "…"
     "…"
@@ -759,7 +799,7 @@ label start:
     call phone_start
 
     call message_start("Darren", "Hey V!")
-    call message_start("Darren", "How did campaigning go?")
+    call message("Darren", "How did campaigning go?")
     call reply_message("…")
 
     call screen phone_reply("Tell him the truth","labelTruth","Lie","labelLie")
@@ -830,16 +870,15 @@ label start:
 
     label entity2:
     "I’m deep in thought when a figure appears before me, seemingly out of thin air. I jump up from my seat."
-    show valeria shocked at left with dissolve
-    show entity neutral at right with dissolve
+    show entity neutral at right
+    show valeria shocked at left
+    with dissolve
     v "What the hell?"
     e "Hello, Valeria. I {i}did{/i} tell you I would contact you again, didn’t I?"
     v "Yeah, well, humans don’t usually just {i}appear{/i} out of thin air when they wanna talk to each other, so don’t blame me for getting a heart attack every time you do… {i}that{/i}."
-    hide valeria shocked
-    show valeria neutral at left
+    show valeria neutral at left with dissolve
     "I gesture to the previously empty space the entity now occupies."
 
-    # !!!
     v "So… you want me to sabotage Darren’s campaign."
     e "Yes, I hope I made that abundantly clear."
     v "Oh trust me, it was {i}very{/i} clear. I just… I just don’t know if I can do this."
@@ -869,17 +908,21 @@ label start:
 #Scene 2: A conversation with the entity in the bedroom that either reinforces Valeria’s pride and actions, or causes her to fight against it
 #Scene 3: Meeting Darren in the library to help him write his speech
 
-    if stats.get_friendship < 0 and stats.getmorals < 0:
+    #if stats.get_friendship < 0 and stats.getmorals < 0:
+    #    jump route3_1
+    #if stats.get_friendship >= 0 and stats.getmorals >= 0:
+    #    jump route3_2
+
+    # Placeholder, just baed off friendship for now with only 2 routes.
+    if stats.get_friendship < 0:
         jump route3_1
-    if stats.get_friendship >= 0 and stats.getmorals >= 0:
-        jump route3_2
     else:
-        "Something went wrong"
-        return
+        jump route3_3
 
 # Route 1 Low Friendship, Low Morality
     label route3_1:
     #//Grayscale background?
+    scene classroom_gray with fade
     "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
     "That made me feel… confident. Needed."
     "But now? I’m watching him breeze through life with his rich parents and good grades while I’m finding myself dead in the water."
@@ -887,13 +930,15 @@ label start:
     "I helped him get to where he is now. And I deserve more than I’m getting."
 
     # Classroom scene
-    scene bg classroom with fade
+    scene bg classroom
     show valeria neutral at left
     show darren neutral at right
-    with dissolve
+    with fade
     "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
     "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
+    show valeria angry at left with dissolve
     "Occasionally, I scowl in Darren’s direction. He doesn’t seem to notice, but that only fuels my anger."
+    show valeria neutral at left with dissolve
     "Professor" "I hope you’re all prepared for our discussion today: the theme of betrayal!"
     "My ears burn. What a fitting topic."
     "Professor" "Now, there are multiple instances of betrayal throughout the poem…"
@@ -918,11 +963,13 @@ label start:
             # Return to main route
         "Decline":
             # Choice: Decline
+            show valeria angry at left with dissolve
             v "No. I’ve got better things to do."
             d "Are you still mad at me? I’m sorry, okay? I’ll give you a proper apology later, I just really need your help right now."
             d "Please?"
             "Well… if I can find a way to ruin his speech, it would go a long way to saving my soul."
             v "Maybe, then. I won’t make any promises."
+            show valeria neutral at left with dissolve
             # Return to main route
 
     "Professor" "… and there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
@@ -955,13 +1002,16 @@ label start:
     # Valeria’s Bedroom
     label bedroom3_1:
     scene bg bedroom with fade
+    show valeria neutral at offscreenleft
+    show valeria neutral at left with ease
     "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and the less time I spend with Darren, the better."
-    show entity neutral with dissolve
+    show entity neutral at right with dissolve
     e "Hello, Valeria."
     "This time, the materialization out of thin air doesn’t faze me."
     v "What do you want {i}this{/i} time?"
     e "Oh, nothing more than what you’re already supplying. You’re doing an excellent job."
     e "Despite all of the support you’ve given him, it seems our dear friend Darren isn’t so eager to return the favor, is he?"
+    show valeria angry at left with dissolve
     "I grit my teeth. It hurts, but it’s the unkind truth."
     v "I’ve been helping him since high school, and {i}this{/i} is how he decides to thank me."
     e "Even {i}I’m{/i} appalled, and I’m a {i}demon{/i}. At the very least, I’m honest and I keep my promises."
@@ -971,10 +1021,12 @@ label start:
     e "What will you do now?"
     "I stalk towards the door and grip the cool metal of the knob tightly."
     v "I’m going to ruin the rest of his life."
+    show valeria angry at offscreenleft with move
 
     # Library
     label library3_1:
     scene bg library with fade
+    show valeria angry at offscreenleft
     show valeria angry at left with move
     "I enter the library in a haze of anger."
     show darren neutral at right with dissolve
@@ -985,14 +1037,17 @@ label start:
         "Stop him":
             # Choice: Stop him
             v "Save it."
+            show darren shocked at right with dissolve
             d "Wh- What?"
             v "I said, {i}save it{/i}. I’m not interested in what you have to say anymore. I’m only here to fulfill a promise, nothing more."
+            show darren angry at right with dissolve
             "Darren furrows his brow and breaks eye contact from me. He doesn’t say anything for a very long time."
             "Nevertheless, I pull out my laptop and start a new document."
             v "Let’s get this over with."
             # Return to main route
         "Listen to his apology":
             # Choice: Listen to his apology
+            show darren sad at right with disolve
             d "I, uhm. This is embarrassing to admit, but I was getting anxious."
             d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
             d "I couldn’t move. I couldn’t do it."
@@ -1014,6 +1069,7 @@ label start:
                 "Reject his apology":
                     # Choice: Reject his apology
                     v "I don’t care."
+                    show darren angry at right with dissolve
                     d "I’m sorry?"
                     v "I don’t want your apology. It’s not fit for me to accept."
                     d "What — what do you want me to do? Grovel at your feet? How am I supposed to apologize further when I don’t know what else I did to you!"
@@ -1024,6 +1080,8 @@ label start:
                     # Return to main route
 
 # Route 3 High Friendship, High Morality
+    label route3_3:
+    scene classroom_gray with fade
     "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
     "That made me feel… confident. Needed."
     "We’ve switched places now. He’s soaring to higher heights than I’d ever reached. All I can do is look up."
@@ -1032,10 +1090,10 @@ label start:
     "If I’ve realized anything from my success in high school and subsequent failure in college, it’s that people aren’t just what they appear to be."
 
     # Classroom scene
-    scene bg classroom with fade
+    scene bg classroom
     show valeria neutral at left
     show darren neutral at right
-    with dissolve
+    with fade
     "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
     "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
     "Occasionally, I try to establish eye contact with Darren, but he doesn’t seem to notice. Or he’s ignoring me. Did I hurt him with my texts last night?"
@@ -1050,11 +1108,13 @@ label start:
             # Choice: Accept
             "If there’s any way to ensure Darren succeeds in winning the hearts of the student body, this would be it."
             "I’m ashamed of the fact that I accepted a deal to hurt him for my own gain. But maybe I can make up for what I did."
+            show valeria happy at left with dissolve
             v "You know what? I have a better idea."
             d "Like what?"
             # Return to main route
         "Decline":
             # Choice: Decline
+            show valeria sad at left with dissolve
             "By now, I’m wary about my role in assisting Darren’s campaign. Clearly this speech is another chance for me to sabotage his work."
             v "I… I don’t think that’s a good idea."
             d "Why?"
@@ -1064,13 +1124,16 @@ label start:
             "Maybe I can spin this another way."
             # Return to main route
 
+    show valeria neutral at left with dissolve
     v "I think you can write the speech. I mean, obviously I’ll proofread and all that. But I think you can write the speech yourself."
     d "What?"
     v "Yeah! You can write well; I’ve seen your persuasive essays. You can practice your speech on me, but I think you can write it yourself."
     d "But what if I mess it up?"
     v "No way, just look at you! How can you mess it up? You’ve been passionate about making the campus a better place for students ever since we started attending classes here."
     v "I believe in you."
+    show darren sad at right with dissolve
     "Darren frowns at me, but I’m forced to shut up when the professor shoots a stern look in my direction."
+    show darren neutral at right with dissolve
     "Professor" "Now… there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
     "Professor" "And yet, he somehow redeemed himself in the end. How?"
 
@@ -1100,8 +1163,10 @@ label start:
     # Valeria’s Bedroom
     label bedroom3_3:
     scene bg bedroom with fade
+    show valeria neutral at offscreenleft
+    show valeria neutral at left with ease
     "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and I might as well collect my thoughts alone."
-    show entity neutral with dissolve
+    show entity neutral at right with dissolve
     e "Hello, Valeria."
     "This time, the materialization out of thin air doesn’t faze me."
     v "Hello."
@@ -1117,7 +1182,9 @@ label start:
     "I get up and sling my backpack over my shoulder. The entity watches me curiously."
     e "What will you do now?"
     "I meet its unblinking stare before I open the door, smiling slightly."
+    show valeria happy at left with dissolve
     v "I’m gonna help my friend."
+    show valeria happy at offscreenleft with ease
 
     # Library
     label library3_3:
@@ -1129,6 +1196,7 @@ label start:
     "Darren waves when he spots me, but his hand moves a little slower than usual. The movement is almost sheepish, like he has half a mind to shrink in his seat."
     d "Hey… I wanted to apologize. For yesterday, that is."
     "He pauses mid-thought, struggling with the words he wants to say. I patiently wait for him to continue."
+    show darren sad at right with dissolve
     d "The reason why I didn’t meet up with you was because… well, I was getting anxious."
     d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
     d "I couldn’t move. I couldn’t do it."
@@ -1140,6 +1208,7 @@ label start:
         "Ask why he didn't tell you":
             # Choice: Ask why he didn’t tell you
             v "Darren, if you’d told me yesterday that you couldn’t do it, I would’ve understood. Why didn’t you?"
+            show darren neutral at right with dissolve
             "Darren lets out a hollow laugh."
             d "It’s so dumb now that I think about it, but I was just scared to tell you."
             v "That isn’t dumb."
@@ -1150,6 +1219,7 @@ label start:
             v "Thanks. The fact that you’re trusting me with this means a lot."
             v "Not to put too fine a point on it, but running for student body president is all about promoting yourself. Do you still want to… ?"
             "Darren sighs."
+            show darren neutral at right with dissolve
             d "Yeah. I really want to make a difference, you know?"
             d "I just need to get better at talking to people. And fast, if I want to start promoting myself before elections next week."
             # Return to main route
@@ -1192,7 +1262,7 @@ label start:
 
     call phone_start
     call message_start("Unknown", "The terms of the contract have been met. You’ll get to keep your scholarship.")
-    call message_start("Unknown", "Congratulations, Valeria Jimenez. It was a pleasure working with you.")
+    call message("Unknown", "Congratulations, Valeria Jimenez. It was a pleasure working with you.")
     call reply_message("The pleasure was all mine.")
     call phone_end
 
@@ -1217,8 +1287,8 @@ label start:
     "Student 1" "Yeah! Not to mention he has a clear and concise plan for how he can help us as president. I really hope he wins."
     "I let out a sigh of relief. Glowing reviews, all around. Hopefully."
     "A hush comes over the audience. I spot Darren striding across the stage towards the mic."
-    show darren happy at offscreenleft
-    show darren happy with ease
+    #show darren neutral at offscreenleft ---too fast
+    show darren neutral at center with dissolve
     "He’s the very picture of confidence."
     d "Good morning, everyone! As you all know, I’m Darren Romero, and I’m running for student body president…"
     "Darren plunges into his speech. I know the words by heart, but something about the way he seems to make eye contact with everyone in the audience, something about the way his voice carries through…"
@@ -1228,28 +1298,29 @@ label start:
     "Everyone erupts into cheers, cheers that are much louder than any reception the other candidates have received."
     "I smile to myself. Suffice it to say, there’s no need to wait until the ballots get counted to know that Darren has won the vote."
     "Right on cue, my phone vibrates in my pocket. I’ve been waiting."
+    hide darren neutral with dissolve
 
     call phone_start
     call message_start("Unknown", "The terms of the contract were not met. You will forfeit your scholarship, life, and soul to me.")
     call reply_message("I’m not scared of you.")
-    call message_start("Unknown", "Then you’re a fool.")
-    call message_start("Unknown", "Before I take over your pitiful existence, I would like to know why.")
+    call message("Unknown", "Then you’re a fool.")
+    call message("Unknown", "Before I take over your pitiful existence, I would like to know why.")
     call reply_message("Guess it couldn’t hurt to explain why I decided to defy the wishes of an immortal demon, huh?")
-    call message_start("Unknown", "You are wasting your time, my dear Valeria. I would talk, and talk fast.")
+    call message("Unknown", "You are wasting your time, my dear Valeria. I would talk, and talk fast.")
     call reply_message("He’s my friend. My soul isn’t worth anything without my friendship to Darren.")
-    call message_start("Unknown", "You would truly have such a low opinion of yourself?")
+    call message("Unknown", "You would truly have such a low opinion of yourself?")
     call reply_message("Your contract called for just one soul — mine.")
     call reply_message("But what happens when my soul is connected to another? And another? One connection for each friendship I have.")
     call reply_message("Unless I cut those ties, you won’t be receiving one soul. You’ll be receiving the pieces of many more.")
     call reply_message("Your contract was flawed from the start.")
-    call message_start("Unknown", "…")
+    call message("Unknown", "…")
     call phone_end
 
     "Somewhere in the back of my mind, I swear I can hear a low, skin-crawling chuckle."
     call phone_start
     call message_start("Unknown", "You are an interesting human, Valeria Jimenez.")
-    call message_start("Unknown", "Congratulations; you have tricked me. Not many can say the same.")
-    call message_start("Unknown", "You are no longer bound to this faulty contract. Enjoy the rest of your life.")
+    call message("Unknown", "Congratulations; you have tricked me. Not many can say the same.")
+    call message("Unknown", "You are no longer bound to this faulty contract. Enjoy the rest of your life.")
     call phone_end
 
     "With my freedom finally confirmed, I begin walking away from the assembled students. Each step I take feels lighter than the last."
@@ -1273,22 +1344,19 @@ label start:
 ####################    End Cards    ########################
 
     label game_over:
-        scene game_over with fade
-        ""
-        return
+        scene bg game over with fade
+        pause
+        jump endgame
 
     label end1:
-        scene end1 with fade
+        scene bg end1 with fade
         pause
-        return
+        jump credits
 
     label end3:
-        scene end3 with fade
+        scene bg end3 with fade
         pause
-        return
-
-    label credits:
-        show bg black with fade
+        jump credits
 
     label extra_end:
         scene end5 with fade
@@ -1299,7 +1367,24 @@ label start:
         d "So how was the game?"
         e "Placeholder text"
 
+    label credits:
+        show bg black with fade
+        show bg credits1 with fade
+        pause(3)
+        show bg credits2 with fade
+        pause(3)
+        show bg credits3 with fade
+        pause(3)
+        show bg credits4 with fade
+        pause(3)
+        show bg credits5 with fade
+        pause(3)
+        show bg credits6 with fade
+        pause(3)
+        show bg credits7 with fade
+        pause(5)
+
     label endgame:
-    # This ends the game.
+    scene bg black with fade
 
     return
