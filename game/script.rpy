@@ -43,7 +43,9 @@ define v = Character("Valeria")
 define d = Character("Darren")
 define e = Character("Unknown", color = "#800000") #maroon
 
-define tester = True
+define friendship = 0
+$morals = 0
+define tester = False
 $join_lunch = True
 
 image classroom_gray = im.Grayscale("bg classroom.jpg")
@@ -53,12 +55,13 @@ define flash = Fade(0.1, 0.0, 0.5, color="#fff")
 define long_flash = Fade(0.5, 0.0, 2.0, color="#fff")
 define shake = Move((0, 10), (0, -10), .10, bounce=True, repeat=True, delay=1)
 
+    # define and instantiates protagonists' stats
+
 # The game starts here.
 label start:
 
-    # define and instantiates protagonists' stats
     python:
-        stats = main_stats(0,0,0)
+        stats = main_stats()
 
     if not tester:
         jump begin
@@ -386,12 +389,14 @@ label start:
     menu:
         "Don't say anything":
             # Choice 1, minor loss of Morality and Friendship
-            $stats.add_both(-1)
+            #$stats.add_both(-1)
+            $friendship += 1
             "Darren may be my best friend, but I’m not about to argue against the truth."
             "Out of the corner of my eye, I notice Darren glancing at me. He stays silent."
         "Defend Darren":
             # Choice 2, minor gain of Morality and Friendship
-            $stats.add_both(1)
+            #$stats.add_both(1)
+            $friendship -= 1
             show valeria angry at left with dissolve
             "I turn around to glare at the person. They roll their eyes."
             "Student" "What? It’s true."
@@ -531,7 +536,8 @@ label start:
 # Join Darren (Friendship increase slightly)
     menu:
         "Politely Decline":
-            $stats.add_friendship(-1)
+            #$stats.add_friendship(-1)
+            $friendship -= 1
             $join_lunch = False
             "After what the professor just said to me, I think the last thing I want to do right now is hang out with Darren."
             v "Sorry Darren, I think I wanna take this lunch alone."
@@ -543,7 +549,8 @@ label start:
             jump aftermenu2
         "Join Darren":
             # Choice: Join Darren
-            $stats.add_friendship(1)
+            #$stats.add_friendship(1)
+            $friendship += 1
             $join_lunch = True
             "My stomach growls at the thought of food."
             v "Let’s go, I’m starving."
@@ -604,7 +611,8 @@ label start:
                 menu:
                     "High-five him":
                         # Choice: High-five him (Minor friendship gain)
-                        $stats.add_friendship(1)
+                        #$stats.add_friendship(1)
+                        $friendship += 1
                         "Of course I have to. It’s basically my duty."
                         "There’s that initial sting of impact, and then the satisfaction of a high-five well-done."
                         d "Now it’s virtually impossible for us to lose."
@@ -707,12 +715,14 @@ label start:
     menu:
         "Throw the rest away":
             # Choice: Throw the rest away
-            $stats.add_both(-3)
+            #$stats.add_both(-3)
+            $friendship -= 3
             show valeria angry with dissolve
             "I chuck the remainder of the promotional cards into a trash bin, lollipops and all, and dust my hands off."
             # Return to main route
         "Keep the rest to return to Darren":
-            $stats.add_both(3)
+            #$stats.add_both(3)
+            $friendship += 3
             # Choice: Keep the rest to return to Darren
             "As annoyed as I am right now, I know Darren spent a lot of time and money on these cards. I’ll just stop promoting for now and hand them back to him later."
             # Return to main route
@@ -748,7 +758,8 @@ label start:
             menu:
                 "Join in":
                     # Choice: Join in
-                    $stats.add_friendship(-1)
+                    #$stats.add_friendship(-1)
+                    $friendship -= 1
                     "Honestly? I can’t blame them."
                     v "He’s my friend and all, but you’re right about the tie."
                     "Student 1" "It’s like, you know this isn’t a real election right? It’s just some stupid school thing."
@@ -761,7 +772,8 @@ label start:
                     "Eventually, we both get tired of joking around, so I return to my studying."
                 "Defend Darren":
                     # Choice: Defend Darren
-                    $stats.add_friendship(1)
+                    #$stats.add_friendship(1)
+                    $friendship += 1
                     show valeria angry with dissolve
                     v "I don’t like the way you’re talking about my best friend."
                     show valeria neutral with dissolve
@@ -794,7 +806,6 @@ label start:
     "I can’t be bothered to answer the mountain of texts that have accrued throughout the day. I don’t even have to energy to mindlessly scroll through social media."
     "My phone lights up with yet another text."
 
-    # !!!
     # Label names here are placeholders
     call phone_start
 
@@ -806,7 +817,8 @@ label start:
 
     # Choice: Tell him the truth (Friendship Gain)
     label labelTruth:
-    $stats.add_friendship(1)
+    #$stats.add_friendship(1)
+    $friendship += 1
     call phone_after_menu
     call message_start("me", "Not very well.")
     call message("Darren", "What do you mean?")
@@ -817,7 +829,8 @@ label start:
 
     # Choice: Lie (Friendship Loss)
     label labelLie:
-    $stats.add_friendship(-1)
+    #$stats.add_friendship(-1)
+    $friendship -= 1
     call phone_after_menu
     call message_start("me", "It went well.")
     call message("Darren", "Really?")
@@ -913,8 +926,12 @@ label start:
     #if stats.get_friendship >= 0 and stats.getmorals >= 0:
     #    jump route3_2
 
-    # Placeholder, just baed off friendship for now with only 2 routes.
-    if stats.get_friendship < 0:
+    # Placeholder, just based off friendship for now with only 2 routes.
+    label debug:
+    #"Friendship: [$main_stats.get_friendship]"
+    #$friendship = stats.get_friendship
+    #"Friendship: [friendship]"
+    if friendship < 0:
         jump route3_1
     else:
         jump route3_3
@@ -1235,7 +1252,6 @@ label start:
     v "Well, you gotta believe in someone, don’t you?"
     v "I know you’re gonna do some great work as president, Darren."
     d "I hope so."
-    label debug:
     "I pull out my laptop and start a new document."
     v "Here. You dictate. I’ll write. Make this speech your own."
     v "And count me as your second-in-command this week. I’m gonna be right there beside you, making people realize you’d be the best president in the history of this college."
@@ -1385,6 +1401,7 @@ label start:
         pause(5)
 
     label endgame:
+    $stats.set_both(0)
     scene bg black with fade
 
     return
