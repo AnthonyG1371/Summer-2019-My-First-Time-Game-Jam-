@@ -20,7 +20,7 @@ define shake = Move((0, 10), (0, -10), .10, bounce=True, repeat=True, delay=1)
 
 # The game starts here.
 label start:
-
+    jump pass_out_cards
     # define and instantiates protagonists' stats
     python:
         stats = main_stats(0,0,0)
@@ -545,36 +545,104 @@ label start:
     "I can’t stop thinking about the deal I made last night. That thing wants me to hurt Darren’s campaign, no doubt. Only then will it help me."
     "The only question is, what am I supposed to do?"
     "At any rate, Darren gave me a task. I’ll have to deal with that first."
+    jump pass_out_cards
 
-    # Campus scene
-    # !!! new scene
+image valeria neutral flip:
+    "valeria neutral"
+    xzoom -1.0
+
+image valeria sad flip:
+    "valeria sad"
+    xzoom -1.0
+
+image valeria angry flip:
+    "valeria angry"
+    xzoom -1.0
+
+image valeria happy flip:
+    "valeria happy"
+    xzoom -1.0
+
+image valeria shocked flip:
+    "valeria shocked"
+    xzoom -1.0
+    linear 0.2 yoffset -50
+    linear 0.2 yoffset 0
+
+transform floor:
+    ypos 1130
+
+label pass_out_cards:
+    # omelette scripting starts here.
+    ""
     scene bg campus with fade
-    show valeria neutral with dissolve
+    show valeria neutral at offscreenleft, floor
+    pause 0.0
+    show valeria neutral at left, floor with move
     "With my arms full of campaign materials, I enter the campus courtyard and start making my rounds."
+    show valeria sad at center, floor with move
     "I don’t see Darren yet. Where is he?"
+    show valeria happy at right, floor with move
     v "Vote Darren Romero for student council president!"
+    show valeria neutral flip at center, floor with move
     "I approach a student and offer a card."
+    show valeria happy flip
     v "Your support would mean a lot!"
+    show valeria neutral flip
     "Student" "No thanks."
+    show valeria sad flip
     "Maybe I should have taken a look at Darren’s website to know what else to say. But then again, I’d been hoping that Darren would take point."
+    show valeria neutral flip
     "Desperate, I flip the card over to show the cherry lollipop taped to the back."
+    show valeria happy flip
     v "There’s a free lollipop!"
+    show valeria neutral flip
     "The student frowns."
+    show valeria sad flip
     "Student" "I don’t like cherry."
+    show valeria angry flip
     "I give up and move on."
+    show valeria happy flip at left, floor with move
     v "Hey, vote for —"
+    show valeria shocked flip
     "Student" "Can I just take the lollipop and give you back the card?"
+    show valeria angry at center, floor with move
     "I turn away from them and approach a different gaggle of students. However, I’m met with the same infuriating indifference."
+    show valeria neutral
     "Student" "I’m not voting. I’m exercising my right as an American citizen to not vote."
+    show valeria sad
     v "You do know this isn’t a real political election, right?"
+    show valeria neutral
     "Student" "Whatever, go read the Constitution or something."
+    show valeria sad
     "I make eye contact with the next student, who’s already shaking their head. The frustration begins to well up inside of me."
+    show valeria angry
     "This isn’t worth my time."
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "Student" "No thanks. I’m curious though: why isn’t Darren here himself?"
+    show valeria angry:
+        linear 0.2 yoffset 25
     v "Great question, buddy. Just take the card."
+    show valeria angry:
+        linear 0.2 yoffset 0
+    pause 0.0
+    show valeria angry at right, floor with move
     "I push the card into the student’s unwilling hands and walk off."
+    show valeria sad
     "It’s actually a valid question, though. Darren told me he would meet up with me, but it’s been a good fifteen minutes and I haven’t seen him at all. It’s {i}his{/i} campaign."
+    show valeria angry:
+        pause 0.5
+        linear 0.5 xzoom 1.0
+        linear 1.5 xalign 1.0
+        pause 0.5
+        linear 0.5 xzoom -1.0
+        linear 1.5 xalign 0.0
+        repeat
     "I’m rapidly getting tired of the general apathy and uncomfortable summer heat I’m experiencing. I’m not even getting paid. I could be studying instead."
+    # show valeria sad at right, floor with move
+    show valeria sad at left with Move(1.5)
     "There’s still a decent stack of promotional cards left, but I don’t want to deal with them anymore."
     # !!! refer to red text in document, there is a choice for throwing the cards away or keeping them; put it here
 
@@ -582,7 +650,6 @@ label start:
     #Keep the rest to return to Darren (Big Morality and Friendship gain)
     menu:
         "Throw the rest away":
-            # Choice: Throw the rest away
             $stats.add_both(-3)
             hide valeria neutral with dissolve
             show valeria angry with dissolve
