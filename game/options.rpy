@@ -10,14 +10,17 @@ image phone = "images/phone.png"
 
 
 # Picking up the phone
-transform phone_pickup:
-    yalign 1.0 xalign 0.5
-    #zoom 0.85
-    #yoffset 900
+transform phone_pickup(xpos=0.5):
+    yalign 1.0
+    xanchor 0.5
+    xpos xpos
+    yoffset 900
     easein 0.3 yoffset 100
 
-transform phone_hide:
-    yalign 1.0 xalign 0.5
+transform phone_hide(xpos=0.5):
+    yalign 1.0
+    xanchor 0.5
+    xpos xpos
     yoffset 100
     easein 0.3 yoffset 1300
 
@@ -36,6 +39,8 @@ transform scrolling_out_message:
 transform incoming_message:
     yoffset 100
     alpha 0
+    xanchor 0.5
+    xpos phone_pos
     parallel:
         easein 0.1 alpha 1
     parallel:
@@ -46,10 +51,15 @@ transform incoming_message:
 
 
 #### labels to shortcut stuff so you dont need to copypaste stuff repeatedly! #####
+default phone_pos = None
 
-label phone_start:
+label phone_start(pos=None):
     window hide
-    show phone at phone_pickup
+    if pos is None:
+        $ phone_pos = 0.5
+    elif pos == "left":
+        $ phone_pos = 0.75
+    show phone at phone_pickup(phone_pos)
     $ renpy.pause(0.2)
     return
 
@@ -86,7 +96,7 @@ label phone_end:
     hide screen phone_message2
     hide screen phone_message3
     hide screen phone_message_image
-    show phone at phone_hide
+    show phone at phone_hide(phone_pos)
     $ renpy.pause(0.2)
     return
 

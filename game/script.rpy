@@ -48,7 +48,7 @@ $morals = 0
 define tester = False
 $join_lunch = True
 
-image classroom_gray = im.Grayscale("bg classroom.jpg")
+image bg classroom_gray = im.Grayscale("bg classroom.jpg")
 
 # define screen effects
 define flash = Fade(0.1, 0.0, 0.5, color="#fff")
@@ -59,7 +59,7 @@ define shake = Move((0, 10), (0, -10), .10, bounce=True, repeat=True, delay=1)
 
 # The game starts here.
 label start:
-
+    # define and instantiates protagonists' stats
     python:
         stats = main_stats()
 
@@ -679,591 +679,980 @@ label start:
     "I can’t stop thinking about the deal I made last night. That thing wants me to hurt Darren’s campaign, no doubt. Only then will it help me."
     "The only question is, what am I supposed to do?"
     "At any rate, Darren gave me a task. I’ll have to deal with that first."
+    jump pass_out_cards
 
-    # Campus scene
+image valeria neutral flip:
+    "valeria neutral"
+    xzoom -1.0
+
+image valeria sad flip:
+    "valeria sad"
+    xzoom -1.0
+
+image valeria angry flip:
+    "valeria angry"
+    xzoom -1.0
+
+image valeria happy flip:
+    "valeria happy"
+    xzoom -1.0
+
+image valeria shocked flip:
+    "valeria shocked"
+    xzoom -1.0
+    linear 0.2 yoffset -50
+    linear 0.2 yoffset 0
+
+transform floor:
+    ypos 1130
+
+### omelette scripting starts here.
+label pass_out_cards:
     scene bg campus with fade
-    show valeria neutral with dissolve
+    show valeria neutral at offscreenleft, floor
+    pause 0.0
+    show valeria neutral at left, floor with move
     "With my arms full of campaign materials, I enter the campus courtyard and start making my rounds."
+    show valeria sad at center, floor with move
     "I don’t see Darren yet. Where is he?"
+    show valeria happy at right, floor with move
     v "Vote Darren Romero for student council president!"
+    show valeria neutral flip at center, floor with move
     "I approach a student and offer a card."
+    show valeria happy flip
     v "Your support would mean a lot!"
+    show valeria neutral flip
     "Student" "No thanks."
+    show valeria sad flip
     "Maybe I should have taken a look at Darren’s website to know what else to say. But then again, I’d been hoping that Darren would take point."
+    show valeria neutral flip
     "Desperate, I flip the card over to show the cherry lollipop taped to the back."
+    show valeria happy flip
     v "There’s a free lollipop!"
+    show valeria neutral flip
     "The student frowns."
+    show valeria sad flip
     "Student" "I don’t like cherry."
+    show valeria angry flip
     "I give up and move on."
+    show valeria happy flip at left, floor with move
     v "Hey, vote for —"
+    show valeria shocked flip
     "Student" "Can I just take the lollipop and give you back the card?"
+    show valeria angry at center, floor with move
     "I turn away from them and approach a different gaggle of students. However, I’m met with the same infuriating indifference."
+    show valeria neutral
     "Student" "I’m not voting. I’m exercising my right as an American citizen to not vote."
+    show valeria sad
     v "You do know this isn’t a real political election, right?"
+    show valeria neutral
     "Student" "Whatever, go read the Constitution or something."
+    show valeria sad
     "I make eye contact with the next student, who’s already shaking their head. The frustration begins to well up inside of me."
+    show valeria angry
     "This isn’t worth my time."
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "Student" "No thanks. I’m curious though: why isn’t Darren here himself?"
+    show valeria angry:
+        linear 0.2 yoffset 25
     v "Great question, buddy. Just take the card."
+    show valeria angry:
+        linear 0.2 yoffset 0
+    pause 0.0
+    show valeria angry at right, floor with move
     "I push the card into the student’s unwilling hands and walk off."
+    show valeria sad
     "It’s actually a valid question, though. Darren told me he would meet up with me, but it’s been a good fifteen minutes and I haven’t seen him at all. It’s {i}his{/i} campaign."
+    show valeria angry:
+        xzoom -1.0
+        linear 1.5 xalign 1.0
+        pause 0.5
+        block:
+            xzoom 1.0
+            linear 1.5 xalign 0.0
+            pause 3.5
+            xzoom -1.0
+            linear 1.5 xalign 1.0
+            pause 3.5
+            repeat
     "I’m rapidly getting tired of the general apathy and uncomfortable summer heat I’m experiencing. I’m not even getting paid. I could be studying instead."
+    # show valeria sad at right, floor with move
+    show valeria sad:
+        linear 0.5 xzoom -1.0
+        linear 1.5 xalign 0.0
     "There’s still a decent stack of promotional cards left, but I don’t want to deal with them anymore."
 
     #Throw the rest away (Big Morality and Friendship loss)
     #Keep the rest to return to Darren (Big Morality and Friendship gain)
     menu:
         "Throw the rest away":
-            # Choice: Throw the rest away
-            #$stats.add_both(-3)
-            $friendship -= 3
-            show valeria angry with dissolve
+            $ friendship -= 3
+            show valeria angry:
+                linear 1.5 xalign 1.0
+                linear 0.25 yoffset 50
+                linear 0.25 yoffset 0
             "I chuck the remainder of the promotional cards into a trash bin, lollipops and all, and dust my hands off."
             # Return to main route
         "Keep the rest to return to Darren":
-            #$stats.add_both(3)
             $friendship += 3
-            # Choice: Keep the rest to return to Darren
+            show valeria sad at center, floor with move
             "As annoyed as I am right now, I know Darren spent a lot of time and money on these cards. I’ll just stop promoting for now and hand them back to him later."
-            # Return to main route
-
+    show valeria neutral
     "Maybe if I manage to find him at all today, he’ll tell me face-to-face why he flaked on me."
+    show valeria neutral at offscreenright, floor with move
+    pause 0.25
+    jump library
 
-    # Library scene
-    label library:
+label library:
     scene bg library with fade
+    show valeria neutral flip at offscreenright, floor
+    pause 0.25
     "With that out of the way, I head towards the library. It’s not a bad place to start working on the problem of my grades."
+    show valeria sad flip at right, floor with move
     "Even though I can hardly understand what I’m reading, I’m trying my best to concentrate. For a moment, I wish Darren had come so that we could study together."
+    show valeria angry flip at center, floor with move
     "Or rather, so that I could rely on him. Maybe it was better that he didn’t come. Maybe I need to prove that I can do this on my own."
-    "A cackle rips through the relative quiet. I glare in the direction of the source, but the students are busy examining a poster on the opposite wall."
+    show valeria angry flip at left, floor with move
+    pause 0.25
+    show valeria shocked flip
+    "A cackle rips through the relative quiet."
+    show valeria angry
+    "I glare in the direction of the source, but the students are busy examining a poster on the opposite wall."
+    show valeria neutral
     "The desired effect of my glare is lost entirely."
+    show valeria sad
     "Student 1" "He looks ridiculous in that poster. He’s trying too hard to look smart."
+    show valeria neutral
     "Student 2" "You can’t deny that he’s smart though."
+    show valeria sad
     "Student 1" "Maybe. He’s still a try-hard though. Look at that tie, it’s just asking to be made fun of."
+    show valeria neutral
     "I peer past them to see what they’re discussing."
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "It’s one of Darren’s campaign posters, depicting him in a formal suit with {i}Vote for Darren!{/i} across the top."
-    "I’m reminded of the promotional cards I’d just handed out. Without Darren’s help."
-
-    # Call out to the students
-    # Ignore them
+    show valeria sad
+    "I’m reminded of the promotional cards I’d just handed out."
+    show valeria angry
+    "Without Darren’s help."
     menu:
         "Call out to the students":
-            show valeria neutral with dissolve
-            # Choice: Call out to the students
+            show valeria neutral at center, floor with move
             v "Hey! Are you guys talking about Darren Romero?"
+            show valeria sad
             "Student 1" "Uh, yeah? Who else?"
+            show valeria neutral
             "Student 2" "I can’t believe you just {i}had{/i} to go and badmouth someone you don’t even know personally."
-            # Join in (Friendship loss)
-            # Defend Darren (Friendship gain)
             menu:
                 "Join in":
-                    # Choice: Join in
-                    #$stats.add_friendship(-1)
                     $friendship -= 1
+                    show valeria sad
                     "Honestly? I can’t blame them."
+                    show valeria happy
                     v "He’s my friend and all, but you’re right about the tie."
+                    show valeria neutral
                     "Student 1" "It’s like, you know this isn’t a real election right? It’s just some stupid school thing."
+                    show valeria happy
                     v "That’s Darren though. He’s always going overboard."
+                    show valeria sad
                     "The other student frowns at me."
+                    show valeria angry
                     "Student 2" "Shouldn’t you be defending him if he’s your friend?"
+                    show valeria angry flip
                     v "Maybe. But I won’t lie, he’s a try-hard. It’s even worse during class. You should see the way he sucks up to professors."
+                    show valeria neutral flip
                     "They shrug, not saying much else as the first student and I make a few more jokes about Darren."
+                    show valeria happy flip
                     "Talking about Darren like this is almost liberating, actually. The frustrations I’ve had bubbling in the pit of my stomach finally surface and I find relief."
+                    show valeria neutral flip
                     "Eventually, we both get tired of joking around, so I return to my studying."
                 "Defend Darren":
-                    # Choice: Defend Darren
-                    #$stats.add_friendship(1)
                     $friendship += 1
-                    show valeria angry with dissolve
+                    show valeria angry:
+                        linear 0.25yoffset -50
+                        linear 0.25yoffset 0
                     v "I don’t like the way you’re talking about my best friend."
-                    show valeria neutral with dissolve
+                    show valeria sad
                     "Even though I’m still annoyed with Darren, there has to be a good reason for why he didn’t show up. I have to trust in him."
+                    show valeria angry
                     "The student rolls their eyes."
+                    show valeria neutral
                     "Student 1" "What I’m saying is true, though. Can you blame me?"
+                    show valeria angry
                     v "Maybe I can. What you call a try-hard I call a hard worker, someone who’s organized and passionate about what they’re doing."
+                    show valeria happy
                     v "You can think whatever you like of Darren, but he’ll succeed because of the effort he puts into everything."
+                    show valeria angry
                     "Student 1" "Still, it’s just a stupid school election. It’s a waste of energy to be putting so much effort in that."
+                    show valeria sad
                     "Student 2" "Hey, just drop it okay? I’m looking to study, not get in a fight. I’m sorry about this one, they have a big mouth."
+                    show valeria neutral
                     v "That’s okay."
+                    show valeria sad flip
                     "I’m not really looking to get into a fight either."
+            show valeria sad flip at center, floor with move
         "Ignore them":
+            show valeria neutral flip
             "That student’s laughing at him, but I don’t want to engage with them. I have better things to worry about."
-
-    # Return to main route
-    hide valeria neutral with dissolve
+            pause 0.05
+            show valeria neutral flip at center, floor with move
+    show valeria neutral flip
+        # linear 0.5 yoffset 50
     "I open up my psychology textbook."
+    show valeria sad flip
     "…"
+    show valeria angry flip
     "…"
+    show valeria angry flip:
+        linear 0.05 xoffset 5
+        linear 0.05 xoffset -5
+        linear 0.1 xoffset 10
+        linear 0.1 xoffset -10
+        repeat
     "I’m suddenly overwhelmed with the urge to throw the book, or better yet myself, out the window."
+
+    show valeria sad flip:
+        linear 0.5 xoffset 0
     "I rub my eyes. Everything’s distracting me — my phone, the students whispering loudly in the corner. Darren’s absence, weighing down on mind."
+    show valeria angry flip
     "The contract I have with my soul on the line…"
+    show valeria sad flip
     "What am I going to do?"
+    jump night2
 
-# Valeria’s Bedroom (night)
-    label night2:
+label night2:
     scene bg bedroom night
+    show valeria neutral at center, floor
+    with fade
     "I sit in my bedroom in silence that night, watching the long shadows sprawled across my wall."
+    show valeria sad
     "I can’t be bothered to answer the mountain of texts that have accrued throughout the day. I don’t even have to energy to mindlessly scroll through social media."
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "My phone lights up with yet another text."
-
-    # Label names here are placeholders
-    call phone_start
-
+    show valeria neutral:
+        linear 0.5 xalign 0.25
+    pause 0.75
+    show valeria neutral flip
+    call phone_start(pos='left')
     call message_start("Darren", "Hey V!")
+    show valeria happy flip
     call message("Darren", "How did campaigning go?")
+    show valeria angry flip
     call reply_message("…")
-
     call screen phone_reply("Tell him the truth","labelTruth","Lie","labelLie")
+    return
 
-    # Choice: Tell him the truth (Friendship Gain)
-    label labelTruth:
-    #$stats.add_friendship(1)
+label labelTruth:
     $friendship += 1
     call phone_after_menu
     call message_start("me", "Not very well.")
+    show valeria sad flip
     call message("Darren", "What do you mean?")
+    show valeria neutral flip
     call reply_message("Everyone I talked to didn’t seem to care, so I gave up.")
+    show valeria sad flip
     call message("Darren", "Oh. Oh well.")
-
+    show valeria neutral flip
     jump after_truth_lie
 
-    # Choice: Lie (Friendship Loss)
-    label labelLie:
-    #$stats.add_friendship(-1)
+label labelLie:
     $friendship -= 1
     call phone_after_menu
     call message_start("me", "It went well.")
+    show valeria sad flip
     call message("Darren", "Really?")
+    show valeria neutral flip
     call reply_message("Yeah, I talked about what you were planning to do.")
+    show valeria sad flip
     call reply_message("People seemed excited.")
+    show valeria angry flip
     call message("Darren", "Right.")
-
+    show valeria sad flip
     jump after_truth_lie
 
-    label after_truth_lie:
-
+label after_truth_lie:
+    show valeria neutral flip
     call message("Darren", "V… when I asked you how campaigning went, you just… sent ellipses.")
+    show valeria sad flip
     call message("Darren", "You know how it is when I get anxious over messages.")
+    show valeria neutral flip
     call message("Darren", "It feels like you’re irritated. Is everything okay?")
-
+    show valeria sad flip
     call screen phone_reply("Point out his absence","labelAbsence","Brush it off","labelBrush")
 
-    # Choice: Point out his absence
-    label labelAbsence:
+label labelAbsence:
     call phone_after_menu
     call message_start("me", "Where were you this afternoon? It’s your campaign, and you weren’t even there.")
+    show valeria angry flip
     call message("Darren", "I know, I’m sorry.")
+    show valeria sad flip
     call message("Darren", "It was kind of on a short notice.")
+    show valeria angry flip
     call reply_message("What was? Seriously, people were asking me about you.")
+    show valeria sad flip
     call reply_message("What could you possibly have been busy with?")
+    show valeria angry flip
     call message("Darren", "I can’t really tell you.")
+    show valeria shocked flip
     call reply_message("Oh, you just wanted to get out of the sun, huh? It was hot as hell, so you made the right choice..")
+    show valeria angry flip
     call message("Darren", "No, that’s not it.")
+    show valeria sad flip
     call reply_message("What was it, then?")
+    show valeria angry flip:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     call message("Darren", "I said, I can’t tell you.")
+    show valeria shocked
     call reply_message("Alright, I see how it is.")
-
+    show valeria angry
     call phone_end
+    show valeria sad
     "I purse my lips in irritation. What’s he not telling me?"
     jump entity2
-    # Return to main route
 
-    # Choice: Brush it off
-    label labelBrush:
+label labelBrush:
     call phone_after_menu
     call message_start("me", "Nothing.")
+    show valeria neutral flip
     call message("Darren", "Are you sure?")
+    show valeria sad flip
     call reply_message("Yeah. Just let me get back to work. I’m fine.")
+    show valeria neutral flip
     call message("Darren", "Okay…")
-
+    show valeria sad flip
     call phone_end
+    show valeria angry flip
     "Whether it’s out of a sense of futility or weariness, Darren doesn’t text back."
+    show valeria sad flip
     "Still, I can’t help but wonder why he never mentioned his absence today."
-    # Return to main route
 
-    label entity2:
+label entity2:
     "I’m deep in thought when a figure appears before me, seemingly out of thin air. I jump up from my seat."
-    show entity neutral at right
-    show valeria shocked at left
-    with dissolve
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        parallel:
+            linear 0.2 yoffset 0
+        parallel:
+            linear 0.2 xalign 0.0
+        block:
+            linear 0.05 xoffset 5
+            linear 0.05 xoffset -5
+            linear 0.1 xoffset 10
+            linear 0.1 xoffset -10
+            repeat
+    show entity neutral at right with flash
     v "What the hell?"
+    show valeria neutral flip at left, floor
     e "Hello, Valeria. I {i}did{/i} tell you I would contact you again, didn’t I?"
+    show valeria angry flip
     v "Yeah, well, humans don’t usually just {i}appear{/i} out of thin air when they wanna talk to each other, so don’t blame me for getting a heart attack every time you do… {i}that{/i}."
-    show valeria neutral at left with dissolve
+    show valeria angry flip:
+        linear 0.25 xoffset 25
+        linear 0.25 xoffset 0
     "I gesture to the previously empty space the entity now occupies."
-
+    show valeria neutral flip
     v "So… you want me to sabotage Darren’s campaign."
+    show valeria sad flip
     e "Yes, I hope I made that abundantly clear."
-    v "Oh trust me, it was {i}very{/i} clear. I just… I just don’t know if I can do this."
+    show valeria angry flip
+    v "Oh trust me, it was {i}very{/i} clear."
+    show valeria sad flip
+    "I just… I just don’t know if I can do this."
+    show valeria shocked flip
     "An unsettling smile crawls across the entity’s face."
+    show valeria sad flip
     e "My dear, you don’t need any supernatural abilities to hurt someone else. Humans do it all the time. They break each other’s hearts, they make each other cry, they drive each other mad, all with a few words. That’s all it takes."
+    show valeria angry flip
     v "What? I’m not doubting my {i}abilities{/i}, I just…"
+    show valeria sad flip
     "My voice falters."
+    show valeria neutral flip
     e "Ah, I see. Is it because he’s your friend?"
+    show valeria sad flip
     "… Is he? I think back to earlier this afternoon, when he made a promise and didn’t keep it. And now he’s refusing to tell me why."
+    show valeria angry flip
     e "Remember the conditions you agreed to. I will own your life and your soul should you fail."
+    show valeria neutral flip
     e "You’re more than capable, Valeria. You already agreed to help him with the campaign. Just choose to do the opposite."
+    show valeria sad flip
     v "…"
+    show valeria angry flip
     v "Tomorrow. I’ll see what I can do."
+    show valeria sad flip
     "The entity’s smile has not faded."
+    show valeria neutral flip
     e "Have a good night, Valeria."
-    hide entity neutral with dissolve
+    show valeria shocked flip
+    hide entity neutral with flash
     "I end up not sleeping at all."
+    show valeria sad flip at center, floor with move
     "That gives me plenty of time to consider my situation."
-
-    scene bg black with fade
-    pause(2)
+    jump day_3
 
 # Day Three
 
 # General course of events regardless of route
-#Scene 1: Going to class, conversation with Darren
-#Scene 2: A conversation with the entity in the bedroom that either reinforces Valeria’s pride and actions, or causes her to fight against it
-#Scene 3: Meeting Darren in the library to help him write his speech
+# Scene 1: Going to class, conversation with Darren
+# Scene 2: A conversation with the entity in the bedroom that either reinforces Valeria’s pride and actions, or causes her to fight against it
+# Scene 3: Meeting Darren in the library to help him write his speech
 
-    #if stats.get_friendship < 0 and stats.getmorals < 0:
-    #    jump route3_1
-    #if stats.get_friendship >= 0 and stats.getmorals >= 0:
-    #    jump route3_2
-
-    # Placeholder, just based off friendship for now with only 2 routes.
-    label debug:
-    #"Friendship: [$main_stats.get_friendship]"
-    #$friendship = stats.get_friendship
-    #"Friendship: [friendship]"
+label day_3:
     if friendship < 0:
         jump route3_1
     else:
         jump route3_3
 
 # Route 1 Low Friendship, Low Morality
-    label route3_1:
-    #//Grayscale background?
-    scene classroom_gray with fade
+label route3_1:
+    scene bg classroom_gray with fade
+    show valeria sad at offscreenright, floor
     "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
+    show valeria sad at right with move
     "That made me feel… confident. Needed."
+    show valeria angry at center with move
     "But now? I’m watching him breeze through life with his rich parents and good grades while I’m finding myself dead in the water."
+    show valeria shocked at left with move
     "Everyone’s constantly rubbing in how Darren is such an excellent student and we should study together. He might offer to help me because we’re friends, but I know it’s also because he pities me."
+    show valeria angry flip:
+        linear 0.05 xoffset 5
+        linear 0.05 xoffset -5
+        linear 0.1 xoffset 10
+        linear 0.1 xoffset -10
+        repeat
     "I helped him get to where he is now. And I deserve more than I’m getting."
 
     # Classroom scene
     scene bg classroom
-    show valeria neutral at left
-    show darren neutral at right
+    show darren neutral at right, floor
+    show valeria angry flip at offscreenright
     with fade
+    show valeria angry flip at left, floor with move
     "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
+    show valeria angry
+    show darren sad
     "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
-    show valeria angry at left with dissolve
-    "Occasionally, I scowl in Darren’s direction. He doesn’t seem to notice, but that only fuels my anger."
-    show valeria neutral at left with dissolve
+    show darren neutral
+    show valeria angry flip
+    "Occasionally, I scowl in Darren’s direction."
+    show valeria shocked
+    "He doesn’t seem to notice, but that only fuels my anger."
+    show valeria neutral
+    show darren happy
     "Professor" "I hope you’re all prepared for our discussion today: the theme of betrayal!"
+    show valeria angry
     "My ears burn. What a fitting topic."
+    show darren neutral
+    show valeria sad
     "Professor" "Now, there are multiple instances of betrayal throughout the poem…"
+    show darren sad
+    show valeria shocked flip
     "Darren nudges me, temporarily distracting me from the lecture at hand."
+    show valeria neutral flip
     d "Hey Valeria, if you don’t mind… could you meet me in the library later? Elections aren’t until next week, but… I kind of want to get my speech out of the way."
+    show valeria angry flip
     "The request comes out slow and hesitant, like he hasn’t forgotten the hostility I showed over text last night."
 
     menu:
         "Accept, with attitude":
             # Choice: Accept, with attitude
+            show valeria angry flip:
+                linear 0.2 xoffset 25
+                linear 0.2 xoffset 0
             v "Shh. The professor’s lecturing on Achilles’ betrayal of Agamemnon. You should show some respect."
+            show valeria shocked flip
+            show darren angry
             d "Come on…"
+            show valeria angry flip
+            show darren neutral
             v "Fine, sure. Maybe I’ll suddenly be busy and won’t show up though. Just to keep you on your toes."
+            show valeria angry
+            show darren sad
             "Darren sighs, but he leaves me alone after that."
-            # Return to main route
         "Offer an abivalent answer":
-            # Choice: Offer an ambivalent answer
+            show valeria flip sad
+            show darren neutral
             v "Oh, I might be busy. Can’t say for sure."
+            show valeria flip neutral
+            show darren angry
             "Darren furrows his brow, clearly annoyed at my non-answer."
+            show darren sad
+            show valeria flip sad
             d "Fine. I’ll see you if you’re able?"
+            show valeria angry
             v "Yup, whatever."
             # Return to main route
         "Decline":
-            # Choice: Decline
-            show valeria angry at left with dissolve
+            show darren neutral
+            show valeria flip angry
             v "No. I’ve got better things to do."
+            show darren angry
+            show valeria neutral flip
             d "Are you still mad at me? I’m sorry, okay? I’ll give you a proper apology later, I just really need your help right now."
+            show darren sad
+            show valeria sad flip
             d "Please?"
+            show valeria angry flip
             "Well… if I can find a way to ruin his speech, it would go a long way to saving my soul."
+            show valeria sad flip
+            show darren happy
             v "Maybe, then. I won’t make any promises."
-            show valeria neutral at left with dissolve
-            # Return to main route
-
+            show valeria neutral
+    show darren neutral
     "Professor" "… and there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
+    show valeria sad
     "Professor" "It’s incredible how pride can drive someone to such lengths. No wonder it’s considered a deadly sin."
 
     menu:
         "Raise hand":
-            # Choice: Raise hand
+            show valeria angry
             "I’m struck by the sudden need to defend Achilles and his decision. After all, he had a valid reason to refuse bowing down to Agamemnon."
+            show valeria neutral
             "Professor" "Yes, what do you have to say?"
+            show valeria angry
+            show darren sad
             v "Isn’t it really harsh to judge Achilles and simply call him prideful?"
+            show valeria neutral
             "Professor" "Go on."
+            show valeria happy
             v "Well, Achilles has every right to stand up for himself. Agamemnon isn’t exactly the greatest of the bunch. Meanwhile, Achilles is the best warrior in the army."
+            show valeria angry
+            show darren angry
             "Darren jumps into the conversation, like he can no longer bear staying silent."
+            show valeria neutral
             d "Still, it’s like the professor said: there are more important things going on. Achilles should put aside his pride. Lives are at stake."
+            show valeria angry
             v "So you’re siding with Agamemnon? The man who shouldn’t be in charge in the first place? He is every bit as prideful as Achilles, but he never proves himself the same way Achilles does."
+            show darren neutral
+            show valeria neutral
             "Darren opens his mouth to reply, but he seems to be at a loss for words. He takes in a deep breath and closes his mouth, signaling an end to the conversation."
+            show valeria angry
             "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand again. Instead, he quietly contemplates the pages of his book."
-            # Return to main route
         "Don't raise hand":
-            # Choice: Don’t raise hand
+            show valeria sad
             "I can’t think of what to say. I never really was the type to participate in class, anyway."
+            show valeria neutral
+            show darren sad
             "The professor continues pushing us to examine the betrayal between Achilles and Agamemnon."
+            show valeria shocked
+            show darren neutral
             "Eventually, I come to my own conclusions. As the greatest warrior in the army, Achilles has every right to stand up for himself. Agamemnon never proves himself; he is beneath Achilles."
+            show darren sad
+            show valeria angry
             "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand at all. Instead, he quietly contemplates the pages of his book."
-            # Return to main route
-
+    show valeria angry
+    show darren neutral
     "I’m not sure if he’s absorbing anything that the professor is saying."
+    jump bedroom3_1
 
-    # Valeria’s Bedroom
-    label bedroom3_1:
+label bedroom3_1:
     scene bg bedroom with fade
-    show valeria neutral at offscreenleft
-    show valeria neutral at left with ease
+    show entity at offscreenright
+    show valeria neutral at offscreenright, floor
+    show valeria neutral at left, floor with ease
     "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and the less time I spend with Darren, the better."
-    show entity neutral at right with dissolve
+    show entity neutral at right with flash
     e "Hello, Valeria."
+    show valeria neutral flip
     "This time, the materialization out of thin air doesn’t faze me."
+    show valeria angry flip
     v "What do you want {i}this{/i} time?"
+    show valeria neutral flip
     e "Oh, nothing more than what you’re already supplying. You’re doing an excellent job."
+    show valeria sad flip
     e "Despite all of the support you’ve given him, it seems our dear friend Darren isn’t so eager to return the favor, is he?"
-    show valeria angry at left with dissolve
+    show valeria angry flip
     "I grit my teeth. It hurts, but it’s the unkind truth."
+    show valeria shocked flip
     v "I’ve been helping him since high school, and {i}this{/i} is how he decides to thank me."
+    show valeria angry flip
     e "Even {i}I’m{/i} appalled, and I’m a {i}demon{/i}. At the very least, I’m honest and I keep my promises."
+    show valeria sad flip
     e "But now… you see? He clearly doesn’t need you. And now, the feeling is mutual."
+    show valeria angry flip
     v "That son of a — "
+    show valeria angry flip:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
+    pause 0.4
+    show valeria angry flip at center, floor
+    show entity:
+        xpos 0.8
+    with move
     "I get up mid-sentence and sling my backpack over my shoulder. The entity curls a shadowy hand around the back of my chair, watching me curiously."
+    show valeria sad flip
     e "What will you do now?"
+    show valeria angry flip at right with move
     "I stalk towards the door and grip the cool metal of the knob tightly."
+    show valeria shocked:
+        xzoom -1.0
     v "I’m going to ruin the rest of his life."
-    show valeria angry at offscreenleft with move
+    show valeria angry at offscreenright with move
+    jump library3_1
 
-    # Library
-    label library3_1:
-    scene bg library with fade
-    show valeria angry at offscreenleft
-    show valeria angry at left with move
+label library3_1:
+    scene bg library
+    show darren neutral at right
+    with fade
+    show valeria angry flip at offscreenleft
+    show valeria angry flip at left with move
     "I enter the library in a haze of anger."
-    show darren neutral at right with dissolve
+    show valeria shocked
+    show darren sad
     "Darren gives me a halfhearted wave when he spots me, like he can perceive the anger that rolls off of me in an all-encompassing aura."
+    show valeria neutral
+    show darren neutral
     d "Hey, I wanted to apologize for yesterday — "
 
     menu:
         "Stop him":
-            # Choice: Stop him
+            show valeria angry
             v "Save it."
-            show darren shocked at right with dissolve
+            show valeria neutral
+            show darren shocked
             d "Wh- What?"
+            show valeria angry
             v "I said, {i}save it{/i}. I’m not interested in what you have to say anymore. I’m only here to fulfill a promise, nothing more."
-            show darren angry at right with dissolve
+            show darren angry
             "Darren furrows his brow and breaks eye contact from me. He doesn’t say anything for a very long time."
+            show darren sad
             "Nevertheless, I pull out my laptop and start a new document."
+            show valeria sad
             v "Let’s get this over with."
-            # Return to main route
         "Listen to his apology":
-            # Choice: Listen to his apology
-            show darren sad at right with disolve
+            show darren sad
             d "I, uhm. This is embarrassing to admit, but I was getting anxious."
+            show darren angry
+            show valeria sad
             d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
+            show valeria neutral
+            show darren sad
             d "I couldn’t move. I couldn’t do it."
+            show darren neutral
             d "To be clear, this isn’t an excuse. I was supposed to be helping you. It’s just… an explanation. For why I wasn’t there when I should have been."
+            show darren sad
+            show valeria angry
             d "You’ve also been acting really weird these past few days. It feels like I hurt you somehow, and I don’t know what I did, but whatever I did, I just want to say…"
+            show valeria sad
             d "I’m sorry."
-            menu:
-                "Ridicule him":
-                    # Choice: Ridicule him
-                    "I scoff."
-                    v "You were {i}scared{/i}? Don’t you know what you signed up for?"
-                    d "Yeah, but —"
-                    v "You’re running for student body president. You should have known you were going to have to do this sort of thing."
-                    v "The only way you’re gonna be able to build up support is if you promote yourself. Which you’re now telling me you’re scared to do."
-                    v "What will everyone think when they realize you’re just a coward?"
-                    "Darren stares at me, mortified, with no words left to grasp at. Ignoring him, I pull out my laptop and open a new document."
-                    v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
-                    # Return to main route
-                "Reject his apology":
-                    # Choice: Reject his apology
-                    v "I don’t care."
-                    show darren angry at right with dissolve
-                    d "I’m sorry?"
-                    v "I don’t want your apology. It’s not fit for me to accept."
-                    d "What — what do you want me to do? Grovel at your feet? How am I supposed to apologize further when I don’t know what else I did to you!"
-                    v "Maybe I would’ve accepted some grovelling before, but I don’t want it anymore. I’m here to do this one final thing for you, and after that, we’re finished."
-                    "Darren narrows his eyes at me. Ignoring him, I pull out my laptop and start a new document."
-                    v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
-                    jump route4_1
-                    # Return to main route
+    menu:
+        "Ridicule him":
+            show valeria angry:
+                linear 0.2 yoffset -25
+                linear 0.2 yoffset 0
+            show darren shocked
+            "I scoff."
+            v "You were {i}scared{/i}? Don’t you know what you signed up for?"
+            show darren shocked
+            d "Yeah, but —"
+            show darren sad
+            v "You’re running for student body president. You should have known you were going to have to do this sort of thing."
+            show darren angry
+            show valeria sad
+            v "The only way you’re gonna be able to build up support is if you promote yourself. Which you’re now telling me you’re scared to do."
+            show valeria angry
+            show darren shocked
+            v "What will everyone think when they realize you’re just a coward?"
+            show valeria neutral
+            "Darren stares at me, mortified, with no words left to grasp at. Ignoring him, I pull out my laptop and open a new document."
+            show valeria sad
+            show darren angry
+            v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
+        "Reject his apology":
+            show valeria angry
+            show darren shocked
+            v "I don’t care."
+            show darren sad
+            show valeria neutral
+            d "I’m sorry?"
+            show valeria angry
+            v "I don’t want your apology. It’s not fit for me to accept."
+            show darren angry
+            d "What — what do you want me to do? Grovel at your feet? How am I supposed to apologize further when I don’t know what else I did to you!"
+            show darren shocked
+            v "Maybe I would’ve accepted some grovelling before, but I don’t want it anymore. I’m here to do this one final thing for you, and after that, we’re finished."
+            show darren angry
+            "Darren narrows his eyes at me. Ignoring him, I pull out my laptop and start a new document."
+            show valeria sad
+            v "Let’s get this over with. I don’t want to do this any more than you do, apparently."
+    jump route4_1
 
 # Route 3 High Friendship, High Morality
-    label route3_3:
-    scene classroom_gray with fade
+label route3_3:
+    scene bg classroom_gray with fade
+    show valeria sad at offscreenright, floor
     "Back in high school, Darren and I studied together a lot. He used to ask me for help since I was always scoring higher than him."
+    show valeria sad at right with move
     "That made me feel… confident. Needed."
+    show valeria angry at center with move
     "We’ve switched places now. He’s soaring to higher heights than I’d ever reached. All I can do is look up."
+    show valeria sad at left with move
     "Still… he’s trying to pull me up. He might have an insufferable know-it-all streak to him, but he’s a good person, through and through."
+    show valeria sad flip
     "I’m still not sure why he flaked on me, but there has to be a reasonable explanation."
+    show valeria sad flip at center with move
     "If I’ve realized anything from my success in high school and subsequent failure in college, it’s that people aren’t just what they appear to be."
 
     # Classroom scene
     scene bg classroom
-    show valeria neutral at left
-    show darren neutral at right
+    show darren neutral at right, floor
+    show valeria sad flip at offscreenright
     with fade
+    show valeria sad flip at left, floor with move
     "When I head into literature class, I find Darren already seated, flipping through the assigned reading of {i}The Iliad{/i}."
+    show darren sad
+    show valeria neutral
     "There’s little to no time to make small talk as the rest of the class filters in, followed by the professor."
+    show darren neutral
+    show valeria neutral flip
     "Occasionally, I try to establish eye contact with Darren, but he doesn’t seem to notice. Or he’s ignoring me. Did I hurt him with my texts last night?"
+    show valeria sad
     "Wish I had telepathy."
+    show valeria neutral
     "Professor" "I hope you’re all prepared for our discussion today: the theme of redemption!"
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "Right as I’m about to give up trying to communicate with Darren, he nudges me."
+    show valeria neutral flip
+    show darren happy
     d "Hey Valeria, if you don’t mind… could you meet me in the library later? Elections aren’t until next week, but… I kind of want to get my speech out of the way."
+    show darren sad
+    show valeria sad flip
     "The request comes out slow and hesitant, like he’s carefully trying to walk on eggshells without breaking them."
 
     menu:
         "Accept":
-            # Choice: Accept
+            show valeria neutral flip
             "If there’s any way to ensure Darren succeeds in winning the hearts of the student body, this would be it."
+            show valeria sad flip
             "I’m ashamed of the fact that I accepted a deal to hurt him for my own gain. But maybe I can make up for what I did."
-            show valeria happy at left with dissolve
+            show valeria happy flip
             v "You know what? I have a better idea."
+            show darren neutral
             d "Like what?"
-            # Return to main route
         "Decline":
-            # Choice: Decline
-            show valeria sad at left with dissolve
+            show valeria sad flip
             "By now, I’m wary about my role in assisting Darren’s campaign. Clearly this speech is another chance for me to sabotage his work."
+            show darren neutral
             v "I… I don’t think that’s a good idea."
+            show valeria neutral flip
+            show darren sad
             d "Why?"
+            show valeria sad flip
             "How can I explain the contract I made with a demonic entity in the most normal way possible? And how can I explain that I was ready to hurt him?"
+            show valeria angry flip
             "I just don’t trust myself with the responsibility of helping him write that speech."
+            show valeria sad flip
             "…"
+            show darren neutral
             "Maybe I can spin this another way."
-            # Return to main route
 
-    show valeria neutral at left with dissolve
+    show valeria neutral flip
     v "I think you can write the speech. I mean, obviously I’ll proofread and all that. But I think you can write the speech yourself."
+    show darren shocked
     d "What?"
+    show valeria happy flip
     v "Yeah! You can write well; I’ve seen your persuasive essays. You can practice your speech on me, but I think you can write it yourself."
+    show darren sad
+    show valeria neutral flip
     d "But what if I mess it up?"
+    show valeria happy flip
     v "No way, just look at you! How can you mess it up? You’ve been passionate about making the campus a better place for students ever since we started attending classes here."
+    show darren neutral
     v "I believe in you."
-    show darren sad at right with dissolve
+    show darren sad
+    show valeria shocked:
+        linear 0.2 yoffset -50
+        linear 0.2 yoffset 0
     "Darren frowns at me, but I’m forced to shut up when the professor shoots a stern look in my direction."
-    show darren neutral at right with dissolve
+    show valeria sad
+    show darren neutral
     "Professor" "Now… there were probably times when you were all going, ‘Hey Achilles, stop being such an idiot already! There are bigger things to deal with than your ego!’"
+    show valeria neutral
     "Professor" "And yet, he somehow redeemed himself in the end. How?"
 
     menu:
         "Raise hand":
-            # Choice: Raise hand
+            show valeria neutral:
+                linear 0.25 yoffset -25
+                linear 0.5 yoffset 0
+                pause 1.5
+                repeat
+            show darren shocked
             "I’m struck by the sudden need to answer the question. After all, Achilles didn’t redeem himself without help."
+            show darren shocked
+            show valeria neutral at left
             "Professor" "Yes, what do you have to say?"
+            show valeria happy
             v "I think a lot of that had to do with not just his actions, but also Patroclus’."
+            show darren sad
             "Darren raises an eyebrow."
+            show valeria neutral
             "Professor" "Go on."
+            show valeria happy
             v "Patroclus’ actions open up that possibility of redemption. His death causes Achilles to do some unspeakable things, but in turn, I think Patroclus’ love redeemed Achilles."
+            show darren neutral
             v "That’s all I wanted to say."
+            show valeria neutral
             "Professor" "Interesting contribution! Anyone else want to add on?"
-            # Return to main route
         "Don't raise hand":
-            # Choice: Don’t raise hand
+            show valeria sad
             "I can’t think of what to say. I never really was the type to participate in class, anyway."
+            show valeria neutral
             "The professor continues pushing us to examine Achilles and his love for Patroclus."
+            show valeria sad
             "Eventually, I come to my own conclusions and write them down. Achilles doesn’t redeem himself without help. Patroclus’ actions open up that possibility of redemption."
-            # Return to main route
-
+    show valeria neutral
+    show darren sad
     "For what seems like the first time ever since we entered college, Darren doesn’t raise his hand at all. Instead, he quietly contemplates the pages of his book."
+    show darren neutral
     "Still, something tells me he’s listening."
+    show valeria happy
     "We’re going to make this happen."
+    jump bedroom3_3
 
-    # Valeria’s Bedroom
-    label bedroom3_3:
+# Valeria’s Bedroom
+label bedroom3_3:
     scene bg bedroom with fade
-    show valeria neutral at offscreenleft
-    show valeria neutral at left with ease
+    show entity at offscreenright
+    show valeria neutral at offscreenright, floor
+    show valeria sad at left, floor with ease
     "After class, I retreat to my dorm. I have some time to kill before I have to meet up with Darren at the library, and I might as well collect my thoughts alone."
-    show entity neutral at right with dissolve
+    show entity neutral at right with flash
     e "Hello, Valeria."
+    show valeria angry
     "This time, the materialization out of thin air doesn’t faze me."
+    show valeria angry flip
     v "Hello."
+    show valeria neutral flip
     e "I must say, I’m fairly disappointed in your progress. The election is coming up soon, and you’re no closer to destroying Darren’s prospects."
+    show valeria sad flip
     e "Almost as if you refuse to."
+    show valeria angry flip
     v "That’s my intention, yes."
+    show valeria sad flip
+    show entity:
+        linear 1.5 xpos 0.5
     "The entity doesn’t immediately reply, but curls its shadowy fingers, one by one, around the back of my chair. I ignore the sudden chill the crawls along my shoulder."
     e "Let me remind you of the terms of our contract — "
+    show valeria angry
     v "You don’t have to remind me. I still remember."
+    show valeria sad
+    show entity:
+        linear 0.25 yoffset -15
+        linear 0.5 yoffset 0
     "The entity snorts."
     e "You would give up your life — your {i}soul{/i} — for your friend?"
+    show valeria angry
     v "What kind of friend would I be if I made him miserable instead?"
+    show valeria sad
     "I get up and sling my backpack over my shoulder. The entity watches me curiously."
+    show valeria neutral flip at right with move
     e "What will you do now?"
+    show valeria neutral
     "I meet its unblinking stare before I open the door, smiling slightly."
-    show valeria happy at left with dissolve
+    show valeria happy
     v "I’m gonna help my friend."
-    show valeria happy at offscreenleft with ease
+    show valeria happy flip at offscreenright with ease
+    jump library3_3
 
-    # Library
-    label library3_3:
+# Library
+label library3_3:
     scene bg library with fade
-    show valeria neutral at offscreenleft
-    show valeria neutral at left with ease
+    show darren sad at right
+    with fade
+    show valeria happy flip at offscreenleft
+    show valeria happy flip at left with move
     "I enter the library in a laser-focused mindset of determination."
-    show darren neutral at right with dissolve
+    show darren neutral
     "Darren waves when he spots me, but his hand moves a little slower than usual. The movement is almost sheepish, like he has half a mind to shrink in his seat."
+    show valeria neutral flip
+    show darren sad
     d "Hey… I wanted to apologize. For yesterday, that is."
+    show valeria sad flip
     "He pauses mid-thought, struggling with the words he wants to say. I patiently wait for him to continue."
-    show darren sad at right with dissolve
+    show valeria neutral flip
     d "The reason why I didn’t meet up with you was because… well, I was getting anxious."
+    show darren neutral
     d "I thought about meeting all of those people and having to promote myself to them. And something inside me… {i}froze{/i}."
+    show darren sad
     d "I couldn’t move. I couldn’t do it."
+    show valeria sad flip
     d "To be clear, this isn’t an excuse. I was supposed to be helping you. It’s just… an explanation. For why I wasn’t there when I should have been."
+    show valeria neutral flip
+    show darren neutral
     d "And I know that hurt you. I don’t blame you."
+    show darren sad
     d "I’m sorry."
 
     menu:
         "Ask why he didn't tell you":
-            # Choice: Ask why he didn’t tell you
+            show valeria sad flip
+            show darren neutral
             v "Darren, if you’d told me yesterday that you couldn’t do it, I would’ve understood. Why didn’t you?"
-            show darren neutral at right with dissolve
+            show valeria neutral flip
+            show darren happy
             "Darren lets out a hollow laugh."
+            show darren neutral
             d "It’s so dumb now that I think about it, but I was just scared to tell you."
+            show valeria happy flip
             v "That isn’t dumb."
+            show darren happy
             d "Thanks."
-            # Return to main route
         "Ask if he still wants to run":
-            # Choice: Ask if he still wants to run
+            show valeria happy flip
             v "Thanks. The fact that you’re trusting me with this means a lot."
+            show valeria neutral flip
+            show darren neutral
             v "Not to put too fine a point on it, but running for student body president is all about promoting yourself. Do you still want to… ?"
+            show darren sad
             "Darren sighs."
-            show darren neutral at right with dissolve
+            show darren neutral
             d "Yeah. I really want to make a difference, you know?"
+            show valeria happy flip
             d "I just need to get better at talking to people. And fast, if I want to start promoting myself before elections next week."
-            # Return to main route
-
+    show valeria neutral flip
     v "Well at any rate, I accept your apology. I won’t lie, I was definitely confused and hurt, but I’m glad you came to me."
+    show darren happy
+    show valeria happy flip
     v "For the record, I meant every word I said earlier. About believing in you. You should believe in yourself, too."
+    show valeria neutral flip
+    show darren sad
     d "Claiming that I believe in myself is one thing. Actually believing in myself is another."
+    show darren neutral
+    show valeria happy flip
     v "Then believe in me, because I believe in you."
-    show darren happy at right with dissolve
-    show darren neutral at right
+    show darren happy at right
     "The corner of Darren’s mouth twitches upwards."
+    show valeria neutral flip
     d "That’s a bit roundabout."
+    show valeria happy flip
     v "Well, you gotta believe in someone, don’t you?"
+    show valeria darren neutral
     v "I know you’re gonna do some great work as president, Darren."
+    show darrne happy
     d "I hope so."
+    show valeria neutral flip
     "I pull out my laptop and start a new document."
+    show darren neutral
     v "Here. You dictate. I’ll write. Make this speech your own."
+    show valeria happy flip
     v "And count me as your second-in-command this week. I’m gonna be right there beside you, making people realize you’d be the best president in the history of this college."
+    show valeria neutral flip
+    show darren happy
     d "… Thanks, Valeria. {w=1.0} For everything."
     jump route4_3
 
 # Day Four (Election Day, a week later)
-
 # General course of events regardless of route
 # Scene 1: Darren gives his speech in the auditorium, then has a conversation with Valeria
-
-    label route4_1:
+label route4_1:
     # Route 1 Low Friendship, Low Morality
     scene bg auditorium with fade
     "Come Election Day, I join the crowds of students gathered to hear the candidates’ speeches."
